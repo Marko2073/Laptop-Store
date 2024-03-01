@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,7 @@ class AdminController extends OsnovniController
         if(in_array('updated_at', $columns)){
             $columns = array_diff($columns, ['updated_at']);
         }
+
 
 
 

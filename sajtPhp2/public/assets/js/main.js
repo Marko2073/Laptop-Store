@@ -135,34 +135,54 @@ $(document).ready(function(){
     var id = this.getAttribute('data-ProductId');
     console.log(id);
     var quantity=1;
+    var parentDiv = this.parentElement;
 
-    var elementQuantity=this.parentElement.querySelector('.brojEl');
-    if(elementQuantity){
-        quantity=elementQuantity.value;
-    }
+    // Dohvaćanje inputa unutar roditeljskog elementa
+    var input = parentDiv.querySelector('.BrojStock');
+
+    // Dohvaćanje vrijednosti inputa
+    var inputValue = input.value;
+
+
+
+
     var cart = JSON.parse(localStorage.getItem('cart'));
 
     if(cart.length==0){
+
         cart.push({id:id, quantity:quantity});
+        toastr.success('Product added to cart');
+
+
     }
     else{
         var found=false;
         for(var i=0; i<cart.length; i++){
             if(cart[i].id==id){
+                if(parseInt(cart[i].quantity)+parseInt(quantity)>inputValue){
+                    toastr.error('Not enough stock');
+                    return;
+                }
+                else{
                 cart[i].quantity=parseInt(cart[i].quantity)+parseInt(quantity);
+
+
+                toastr.success('Product added to cart');
+
                 found=true;
                 break;
+                }
             }
         }
         if(!found){
             cart.push({id:id, quantity:quantity});
+            toastr.success('Product added to cart');
+
+
+
         }
     }
     localStorage.setItem('cart', JSON.stringify(cart));
-
-
-
-
 
     });
     }
@@ -177,108 +197,33 @@ $(document).ready(function(){
 
 
 //cart
+
+
+if(window.location.pathname=='/checkout'){
 $(document).ready(function(){
-    var cart = JSON.parse(localStorage.getItem('cart'));
-    var element = document.getElementById('korpa');
-    var divEl=document.getElementById('TotalOrder');
-    $.ajax({
-        url: '/api/products',
-        method: 'GET',
-        success: function(response){
-            console.log(response);
-            var products = response;
-            var total=0;
-            var html='';
-            var checkout='';
+        var modal = document.getElementById("purchaseModal");
 
-            for(var i=0; i<cart.length; i++){
-                for(var j=0; j<products.length; j++){
-                    if(cart[i].id==products[j].model_specification_id){
-                        var product = products[j];
-                        html+='<tr>';
-                        html+='<td><img src="'+product.picture+'" alt="Image" class="img-fluid" style="width: 50px;"></td>';
-                        html+='<td>'+product.name+'</td>';
-                        html+='<td>'+product.price+'</td>';
-                        html+='<td>'+cart[i].quantity+'</td>';
-                        html+='<td>'+product.price*cart[i].quantity+'</td>';
-                        html+='<td><button class="btn btn-primary remove" data-ProductId="'+product.model_specification_id+'">Remove</button></td>';
-                        html+='</tr>';
-                        total+=product.price*cart[i].quantity;
-
-                    }
-                }
-            }
-            html+='<tr>';
-            html+='<td colspan="4">Total</td>';
-            html+='<td>'+total+'</td>';
-            html+='<td></td>';
-            html+='</tr>';
-
-
-            html+='</tbody></table>';
-
-
-            element.innerHTML = html;
-
+        function closeModal() {
+            modal.style.display = "none";
+            window.location.href = '/shop';
         }
-    });
-    var divTotalOrder=document.getElementById('TotalOrder');
-    var totalPrice=0;
 
-    $.ajax({
-            url: '/api/products',
-            method: 'GET',
-            success: function(response){
-
-                for(var i=0; i<cart.length; i++){
-                    for(var j=0; j<response.length; j++){
-                        if(cart[i].id==response[j].model_specification_id){
-                            var product = response[j];
-                            totalPrice+=product.price*cart[i].quantity;
-
-                            divTotalOrder.innerHTML+=`<div class="d-flex justify-content-between">
-                                                                                  <p>${product.name}</p>
-                                                                                  <p>${product.price}</p>
-                                                                              </div>`;
-                        }
-                    }
-
-                }
-                document.getElementById('subtot').innerHTML=`${totalPrice}</h4>`;
-
-
+        window.addEventListener("click", function(event) {
+            if (event.target == modal) {
+                closeModal();
+                window.location.href = '/shop';
             }
         });
 
-    setTimeout(function(){
-        var dugmici = document.getElementsByClassName('remove');
-        for (var i = 0; i < dugmici.length; i++) {
-            dugmici[i].addEventListener('click', function(){
-                var id = this.getAttribute('data-ProductId');
-                var cart = JSON.parse(localStorage.getItem('cart'));
-                for(var i=0; i<cart.length; i++){
-                    if(cart[i].id==id){
-                        cart.splice(i, 1);
-                        break;
-                    }
-                }
-                localStorage.setItem('cart', JSON.stringify(cart));
-                location.reload();
-            });
+
+
+    window.addEventListener("click", function(event) {
+        if (event.target == modal) {
+            closeModal();
+            window.location.href = '/shop';
         }
-    }, 300);
+    });
 
-    var brojElemenataUKorpi=JSON.parse(localStorage.getItem('cart')).length;
-
-    var divCount = document.getElementById('korpaCount');
-    divCount.innerHTML = brojElemenataUKorpi;
-
-
-
-});
-
-//checkout
-$(document).ready(function(){
     var select = document.getElementById('Placanje');
     select.addEventListener('change', function(){
     if(select.value==1){
@@ -349,6 +294,34 @@ $(document).ready(function(){
     }
 
     });
+    var divTotalOrder=document.getElementById('TotalOrder');
+        var totalPrice=0;
+        var cart = JSON.parse(localStorage.getItem('cart'));
+
+        $.ajax({
+                url: '/api/products',
+                method: 'GET',
+                success: function(response){
+
+                    for(var i=0; i<cart.length; i++){
+                        for(var j=0; j<response.length; j++){
+                            if(cart[i].id==response[j].model_specification_id){
+                                var product = response[j];
+                                totalPrice+=product.price*cart[i].quantity;
+
+                                divTotalOrder.innerHTML+=`<div class="d-flex justify-content-between">
+                                                                                      <p>${cart[i].quantity} x ${product.name}</p>
+                                                                                      <p>${product.price}</p>
+                                                                                  </div>`;
+                            }
+                        }
+
+                    }
+                    document.getElementById('subtot').innerHTML=`${totalPrice}</h4>`;
+
+
+                }
+            });
 
 
 
@@ -371,7 +344,7 @@ $(document).ready(function(){
         if(placanje==1){
             var card = document.getElementById('IzborKartice').value;
             if(card==0){
-                alert('Choose card');
+                toastr.error('Choose card');
                 return;
             }
             else{
@@ -389,12 +362,8 @@ $(document).ready(function(){
                     },
                     success: function(response){
                         localStorage.setItem('cart', '[]');
-                        document.getElementById('mojModal').style.display='block';
-                        setTimeout(function(){
-                            document.getElementById('mojModal').style.display='none';
-                            location.href='/';
-                        }, 3000);
-
+                        toastr.success('Order successful');
+                        document.getElementById("purchaseModal").style.display = "block";
 
                     }
                 });
@@ -414,24 +383,112 @@ $(document).ready(function(){
                     },
                     success: function(response){
                         localStorage.setItem('cart', '[]');
-                        document.getElementById('mojModal').style.display='block';
-                        setTimeout(function(){
-                            document.getElementById('mojModal').style.display='none';
-                            location.href='/';
-                        }, 3000);
+                        toastr.success('Order successful');
+                        document.getElementById("purchaseModal").style.display = "block";
+
 
 
                     }
                 });
             }
             else{
-                alert('Choose payment method');
+                toastr.error('Choose payment method');
             }
         }
 
+var showModalBtn = document.getElementById("showModalBtn");
+    var closeBtn = document.querySelector(".close");
 
+
+    function closeModal() {
+        modal.style.display = "none";
+        window.location.href = '/shop';
+    }
+
+    closeBtn.addEventListener("click", closeModal);
 
 
 
     });
 });
+}
+
+if(window.location.pathname=='/cart'){
+
+
+    $(document).ready(function(){
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        var element = document.getElementById('korpa');
+        var divEl=document.getElementById('TotalOrder');
+        $.ajax({
+            url: '/api/products',
+            method: 'GET',
+            success: function(response){
+                console.log(response);
+                var products = response;
+                var total=0;
+                var html='';
+                var checkout='';
+
+                for(var i=0; i<cart.length; i++){
+                    for(var j=0; j<products.length; j++){
+                        if(cart[i].id==products[j].model_specification_id){
+                            var product = products[j];
+                            html+='<tr>';
+                            html+='<td><img src="'+product.picture+'" alt="Image" class="img-fluid" style="width: 50px;"></td>';
+                            html+='<td>'+product.name+'</td>';
+                            html+='<td>'+product.price+'</td>';
+                            html+='<td>'+cart[i].quantity+'</td>';
+                            html+='<td>'+product.price*cart[i].quantity+'</td>';
+                            html+='<td><button class="btn btn-primary removebt" data-ProductId="'+product.model_specification_id+'">Remove</button></td>';
+                            html+='</tr>';
+                            total+=product.price*cart[i].quantity;
+
+                        }
+                    }
+                }
+                html+='<tr>';
+                html+='<td colspan="4">Total</td>';
+                html+='<td>'+total+'</td>';
+                html+='<td></td>';
+                html+='</tr>';
+
+
+                html+='</tbody></table>';
+
+
+                element.innerHTML = html;
+
+            }
+        });
+
+
+
+
+        var brojElemenataUKorpi=JSON.parse(localStorage.getItem('cart')).length;
+
+        var divCount = document.getElementById('korpaCount');
+        divCount.innerHTML = brojElemenataUKorpi;
+
+
+
+    });
+    setTimeout(function(){
+    var dugmici = document.getElementsByClassName('removebt');
+        for (var i = 0; i < dugmici.length; i++) {
+            dugmici[i].addEventListener('click', function(){
+                var id = this.getAttribute('data-ProductId');
+                var cart = JSON.parse(localStorage.getItem('cart'));
+                for(var i=0; i<cart.length; i++){
+                    if(cart[i].id==id){
+                        cart.splice(i, 1);
+                        break;
+                    }
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                location.reload();
+            });
+        }
+    }, 700);
+ }
+

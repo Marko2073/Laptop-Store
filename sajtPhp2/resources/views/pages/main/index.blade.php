@@ -43,16 +43,7 @@
                                 <div class="h-100 bg-light p-30">
                                     <h3>{{$productsRandom[0]->brand_name. ' ' . $productsRandom[0]->name }}</h3>
 
-                                    <div class="d-flex mb-3">
-                                        <div class="text-primary mr-2">
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star-half-alt"></small>
-                                            <small class="far fa-star"></small>
-                                        </div>
-                                        <small class="pt-1">(99 Reviews)</small>
-                                    </div>
+
 
 
                                     <h3 class="font-weight-semi-bold mb-4">${{$productsRandom[0]->price}}</h3>
@@ -62,19 +53,8 @@
                                     </p>
 
                                     <div class="d-flex align-items-center mb-4 pt-2">
-                                        <div class="input-group quantity mr-3" style="width: 130px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-primary btn-minus">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" class="form-control bg-secondary border-0 text-center brojEl" value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-primary btn-plus">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+                                        <input type="hidden" class="BrojStock" data-id="{{$productsRandom[0]->model_specification_id}}" value="{{$productsRandom[0]->stock}}">
+
                                         <button class="btn btn-primary px-3 addCart" data-ProductId="{{$productsRandom[0]->model_specification_id}}"><i class="fa fa-shopping-cart mr-1"></i> Add To
                                             Cart</button>
                                     </div>

@@ -21,6 +21,20 @@
         </div>
     </div>
     <!-- Breadcrumb End -->
+    <div id="purchaseModal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-light">
+                    <h5 class="modal-title">
+                        Successful purchase</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>You can view your orders on your profile in the order history section!</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Checkout Start -->

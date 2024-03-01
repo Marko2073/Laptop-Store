@@ -129,10 +129,17 @@
                                 @if($new[$index]->name == 'Yes')
                                     <span class="badge badge-primary position-absolute" style="z-index: 2; left: -10px; top:-10px ; padding: 10px 20px; clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);">New Arrival</span>
                                 @endif
-                                <div class="product-img position-relative overflow-hidden">
+                                    @if($product->stock == 0)
+                                        <span class="badge badge-danger position-absolute" style="z-index: 2; right: -10px; top: -10px; padding: 10px 20px; clip-path: polygon(100% 0, 100% 100%, 0 100%, 15% 50%, 0 0);">Out of stock</span>
+                                    @endif
+
+                                    <div class="product-img position-relative overflow-hidden">
                                     <img class="img-fluid w-100" src="{{$product->picture}}" alt="">
                                     <div class="product-action">
+                                        @if($product->stock != 0)
+                                        <input type="hidden" class="BrojStock" data-id="{{$product->model_specification_id}}" value="{{$product->stock}}">
                                         <a class="btn btn-outline-dark btn-square addCart" data-ProductId="{{$product->model_specification_id}}" ><i class="fa fa-shopping-cart"></i></a>
+                                        @endif
                                         <a class="btn btn-outline-dark btn-square" href="{{route('show',$product->model_specification_id)}}"><i class="fa fa-search"></i></a>
                                     </div>
                                 </div>

@@ -18,8 +18,8 @@
         <div class="col">
             <div class="bg-light p-30">
                 <div class="nav nav-tabs mb-4">
-                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">About user</a>
-                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Order details</a>
+                    <a class="nav-item nav-link text-dark active" id="ordersDetails1" data-toggle="tab" href="#tab-pane-1">About user</a>
+                    <a class="nav-item nav-link text-dark" id="ordersDetails" data-toggle="tab" href="#tab-pane-2">Order details</a>
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
@@ -137,9 +137,9 @@
                                         <div class="nav nav-tabs mb-4">
                                             @foreach($usercard as $index=>$card)
                                                 @if($index==0)
-                                                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#kitica{{$index}}">{{$card->card_name}}</a>
+                                                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#alo{{$index}}">{{$card->card_name}}</a>
                                                 @else
-                                                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#kitica{{$index}}">{{$card->card_name}}</a>
+                                                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#alo{{$index}}">{{$card->card_name}}</a>
                                                 @endif
 
                                             @endforeach
@@ -148,7 +148,7 @@
                                         <div class="tab-content">
                                             @foreach($usercard as $index=>$card)
                                                 @if($index==0)
-                                                    <div class="tab-pane fade show active" id="{{'kitica'.$index}}">
+                                                    <div class="tab-pane fade show active" id="{{'alo'.$index}}">
                                                         <form action="{{route('updatecard')}}" method="POST">
                                                             @csrf
                                                             <input type="hidden" value="{{$card->id}}" name="cardid">
@@ -184,7 +184,7 @@
 
                                                     </div>
                                                 @else
-                                                    <div class="tab-pane fade show" id="{{'kitica'.$index}}">
+                                                    <div class="tab-pane fade show" id="{{'alo'.$index}}">
                                                         <form action="{{route('updatecard')}}" method="POST">
                                                             @csrf
                                                             <input type="hidden" value="{{$card->id}}" name="cardid">

@@ -9810,4 +9810,54 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 
+.modal {
+    display: none; /* Modalni prozor se inicijalno ne prikazuje */
+    position: fixed; /* Fiksni položaj modalnog prozora */
+    z-index: 9999; /* Visoki z-index kako bi bio iznad ostalog sadržaja */
+    left: 0;
+    top: 0;
+    width: 100%; /* Puni širina */
+    height: 100%; /* Puni visina */
+    overflow: auto; /* Omogućuje skroliranje ako je sadržaj duži od ekrana */
+    background-color: rgba(0,0,0,0.4); /* Tamna pozadina */
+}
 
+/* Stilizacija sadržaja modalnog prozora */
+.modal-content {
+    background-color: #fefefe; /* Boja pozadine */
+    margin: 15% auto; /* Centralno pozicioniranje */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Širina sadržaja */
+}
+
+/* Stilizacija zaglavlja modalnog prozora */
+.modal-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Stilizacija naslova u zaglavlju */
+.modal-title {
+    margin-bottom: 0;
+}
+
+/* Stilizacija tijela modalnog prozora */
+.modal-body {
+    padding: 10px 16px;
+}
+
+/* Stilizacija gumba za zatvaranje */
+.close {
+    color: #000;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

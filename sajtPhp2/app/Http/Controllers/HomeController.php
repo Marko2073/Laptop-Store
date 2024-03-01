@@ -37,7 +37,7 @@ class HomeController extends OsnovniController
             ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
             ->join('specifications_individually', 'model_specification.id', '=', 'specifications_individually.model_specification_id')
             ->join('specifications', 'specifications.id', '=', 'specifications_individually.specification_id')
-            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price')
+            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'model_specification.stockQuantity as stock')
 
             ->distinct()
             ->inRandomOrder($seed)
