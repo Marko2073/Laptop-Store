@@ -34,7 +34,7 @@ class UserController extends Controller
         $card->user_id = session()->get('user')->id;
         $card->save();
 
-/*        return redirect()->route('profile');*/
+        return redirect()->route('profile');
     }
     public function updatecard(CardRequest $request)
     {

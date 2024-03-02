@@ -22,10 +22,11 @@ class CardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cardnumber' => 'required|string|min:20,max:20',
+            'cardnumber' => ['required', 'string', 'regex:/^\d{4}-\d{4}-\d{4}-\d{4}$/'],
             'cardname' => 'required|string',
             'expirationdate' => 'required|string|min:5,max:5',
             'cvv' => 'required|numeric|digits:3'
         ];
     }
+
 }

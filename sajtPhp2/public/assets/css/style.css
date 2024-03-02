@@ -9861,3 +9861,15 @@ a.text-dark:hover, a.text-dark:focus {
     text-decoration: none;
     cursor: pointer;
 }
+
+#cartInfo {
+    display: none;
+    position: fixed;
+    top: 170px; /* Adjust this value to fit your layout */
+    right: 10px; /* Adjust this value to fit your layout */
+    z-index: 9999;
+    width: 250px; /* Adjust the width as needed */
+}
+#cartInfo .card-body {
+    overflow-y: auto;
+}

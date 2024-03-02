@@ -156,7 +156,7 @@ class ShopController extends OsnovniController
             ->join('brands', 'models.brand_id', '=', 'brands.id')
             ->join('pictures', 'model_specification.id', '=', 'pictures.model_specification_id')
             ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
-            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price')
+            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'model_specification.stockQuantity as stock')
             ->distinct()
             ->get();
         return response()->json($products);

@@ -189,6 +189,57 @@ $(document).ready(function(){
 
     }, 1000);
 
+ var hoverCart = document.getElementById('hoverCart');
+ var cartInfo = document.getElementById('cartInfo');
+
+ function displayCartInfo() {
+     var products = JSON.parse(localStorage.getItem('cart')) || [];
+
+     if (products.length > 0) {
+         $.ajax({
+             url: '/api/products',
+             method: 'GET',
+             success: function(response){
+                 var html = '';
+                 var totalPrice = 0;
+                 for (var i = 0; i < products.length; i++) {
+                     for (var j = 0; j < response.length; j++) {
+                         if (products[i].id == response[j].model_specification_id) {
+                             var product = response[j];
+                             html += `
+                                 <div class="d-flex justify-content-between mb-2">
+                                     <p>${products[i].quantity} x ${product.name}</p>
+                                     <p>${product.price}</p>
+                                 </div>
+                             `;
+                             totalPrice += product.price * products[i].quantity;
+                         }
+                     }
+                 }
+                 html += `
+                     <div class="d-flex justify-content-between font-weight-bold">
+                         <p>Total</p>
+                         <p>${totalPrice}</p>
+                     </div>
+                 `;
+                 cartInfo.querySelector('.card-body').innerHTML = html;
+             }
+         });
+     } else {
+         cartInfo.querySelector('.card-body').innerHTML = '<p class="text-muted">Your cart is empty.</p>';
+     }
+ }
+
+ hoverCart.addEventListener('mouseenter', function() {
+     displayCartInfo();
+     cartInfo.style.display = 'block';
+ });
+
+ hoverCart.addEventListener('mouseleave', function() {
+     cartInfo.style.display = 'none';
+ });
+
+
 
 
 
@@ -417,6 +468,7 @@ if(window.location.pathname=='/cart'){
 
 
     $(document).ready(function(){
+    function updateCart(){
         var cart = JSON.parse(localStorage.getItem('cart'));
         var element = document.getElementById('korpa');
         var divEl=document.getElementById('TotalOrder');
@@ -438,7 +490,7 @@ if(window.location.pathname=='/cart'){
                             html+='<td><img src="'+product.picture+'" alt="Image" class="img-fluid" style="width: 50px;"></td>';
                             html+='<td>'+product.name+'</td>';
                             html+='<td>'+product.price+'</td>';
-                            html+='<td>'+cart[i].quantity+'</td>';
+                            html+='<td><input type="number" class="quantityInput" min="1" max="'+product.stock+'" value="'+cart[i].quantity+'" data-prId="'+product.model_specification_id+'"></td>';
                             html+='<td>'+product.price*cart[i].quantity+'</td>';
                             html+='<td><button class="btn btn-primary removebt" data-ProductId="'+product.model_specification_id+'">Remove</button></td>';
                             html+='</tr>';
@@ -470,7 +522,8 @@ if(window.location.pathname=='/cart'){
         var divCount = document.getElementById('korpaCount');
         divCount.innerHTML = brojElemenataUKorpi;
 
-
+    }
+    updateCart();
 
     });
     setTimeout(function(){
@@ -486,10 +539,55 @@ if(window.location.pathname=='/cart'){
                     }
                 }
                 localStorage.setItem('cart', JSON.stringify(cart));
+
                 location.reload();
             });
         }
+
+         $('.quantityInput').on('change', function() {
+            var id = this.getAttribute('data-prId');
+            var cart = JSON.parse(localStorage.getItem('cart'));
+            var max = this.getAttribute('max');
+            var min = this.getAttribute('min');
+            for(var i=0; i<cart.length; i++){
+                if(cart[i].id==id){
+                    if(this.value>max){
+                        toastr.error('Not enough stock');
+                        this.value=max;
+                        cart[i].quantity=this.value;
+                        break;
+                    }
+                    else if(this.value<min){
+                        toastr.error('Minimum quantity is 1');
+                        this.value=min;
+                        cart[i].quantity=this.value;
+                        break;
+                    }
+                    else if(this.value==min){
+                    this.value=min;
+                    cart[i].quantity=this.value;
+                    toastr.error('Minimum quantity is 1');
+                    break;
+
+                    }
+                    else if(this.value==max){
+                    this.value=max;
+                    cart[i].quantity=this.value;
+                    toastr.error('Not enough stock');
+                    break;
+                    }
+                    else{
+                    cart[i].quantity=this.value;
+                    break;
+                    }
+                }
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+         });
+
     }, 700);
+
+
  }
 
 

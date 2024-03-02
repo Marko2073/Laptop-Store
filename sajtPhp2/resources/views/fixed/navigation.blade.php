@@ -39,7 +39,7 @@
                 <a href="" class="btn px-0 ml-2">
                     <i class="fas fa-heart text-dark"></i>
                 </a>
-                <a href="" class="btn px-0 ml-2">
+                <a href="/cart" class="btn px-0 ml-2">
                     <i class="fas fa-shopping-cart text-dark"></i>
                 </a>
             </div>
@@ -96,13 +96,25 @@
                     </div>
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
 
-                        <a href="/cart" class="btn px-0 ml-3">
+                        <a href="/cart" class="btn px-0 ml-3" id="hoverCart">
                             <i class="fas fa-shopping-cart text-primary"></i>
                         </a>
                     </div>
+
                 </div>
+
             </nav>
         </div>
     </div>
 </div>
+<div class="card mt-2" id="cartInfo">
+    <div class="card-header bg-dark text-light">
+        <i class="fas fa-shopping-cart mr-2"></i>Your Cart
+    </div>
+    <div class="card-body bg-light">
+        <!-- Ovdje se prikazuju informacije o košarici -->
+    </div>
+</div>
 <!-- Navbar End -->
+
+

@@ -96,8 +96,18 @@
                                 <div class="card mb-4 mb-xl-0">
                                     <div class="card-header">Add credit card</div>
                                     <div class="card-body">
+                                        @if($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach($errors->all() as $error)
+                                                        <li>{{$error}}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
                                         <form action="{{route('storecard')}}" method="POST">
                                             @csrf
+
                                             <div class="form-group" >
                                                 <label>Name</label>
                                                 <select class="form-control" name="cardname">
@@ -112,16 +122,16 @@
 
                                             <div class="form-group" >
                                                 <label>Card Number</label>
-                                                <input class="form-control" type="text" placeholder="1234 5678 9101 1121" name="cardnumber" value="">
+                                                <input class="form-control" type="text" placeholder="1234-5678-9101-1121" name="cardnumber" value="{{old('cardnumber')}}">
                                             </div>
                                             <div class="form-group" >
                                                 <label>Expiration Date</label>
-                                                <input class="form-control" type="text" placeholder="MM/YY" name="expirationdate" value="">
+                                                <input class="form-control" type="text" placeholder="MM/YY" name="expirationdate" value="{{old('expirationdate')}}">
                                             </div>
 
                                             <div class="form-group" >
                                                 <label>CVV</label>
-                                                <input class="form-control" type="text" placeholder="123" name="cvv" value="">
+                                                <input class="form-control" type="text" placeholder="123" name="cvv" value="{{old('cvv')}}">
                                             </div>
 
                                             <input class="btn btn-primary" type="submit" value="Save changes">

@@ -108,9 +108,7 @@
             <div class="row">
                 <div class="receipt-header">
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <div class="receipt-left">
-                            <img class="img-responsive" alt="iamgurdeeposahan" src="{{asset('assets/img/products-resize/'. $user->path)}}" style="width: 71px; border-radius: 43px;">
-                        </div>
+
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 text-right">
                         <div class="receipt-right">
