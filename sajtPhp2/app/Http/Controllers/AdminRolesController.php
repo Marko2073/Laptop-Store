@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NameRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -27,7 +28,7 @@ class AdminRolesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(NameRequest $request)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -74,7 +75,7 @@ class AdminRolesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(NameRequest $request, string $id)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -95,6 +96,7 @@ class AdminRolesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('roles')->where('id', $id)->delete();
+        return redirect()->route('table', ['name' => 'roles']);
     }
 }

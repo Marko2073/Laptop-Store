@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ModelSpecRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -38,7 +39,7 @@ class AdminModelSpecificationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ModelSpecRequest $request)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -80,7 +81,7 @@ class AdminModelSpecificationController extends Controller
 
     }
 
-    public function update(Request $request, string $id)
+    public function update(ModelSpecRequest $request, string $id)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -99,6 +100,7 @@ class AdminModelSpecificationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('model_specification')->where('id', $id)->delete();
+        return redirect()->route('table', ['name' => 'model_specification']);
     }
 }

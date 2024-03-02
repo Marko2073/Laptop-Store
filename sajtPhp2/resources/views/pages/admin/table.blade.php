@@ -6,12 +6,22 @@
 
 
 @section('content')
-
-
-
-
-
-
+    <div id="deleteModal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-light">
+                    <h5 class="modal-title">Delete Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"  id="cancelDelete">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-12">
         <div class="bg-secondary rounded h-100 p-4">
             <a href="{{route($name.'.create')}}" class="btn btn-success">Insert</a>
@@ -49,7 +59,7 @@
                                 <a href="{{route($name.'.edit',[$row->id])}}" class="btn btn-warning">Edit</a>
                             </td>
                             <td>
-                                <a href="/admin/{{$name}}/delete/{{$row->id}}" class="btn btn-danger">Delete</a>
+                                <button type="button" class="btn btn-danger brisiAdmin" data-IdBrisi="{{$row->id}}">Delete</button>
                             </td>
                         </tr>
                     @endforeach

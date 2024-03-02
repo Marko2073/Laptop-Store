@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ModelsRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,7 +44,7 @@ class AdminModelsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ModelsRequest $request)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -93,7 +94,7 @@ class AdminModelsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ModelsRequest $request, string $id)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -115,6 +116,8 @@ class AdminModelsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('models')->where('id', $id)->delete();
+
+        return redirect()->route('table', ['name' => 'models']);
     }
 }

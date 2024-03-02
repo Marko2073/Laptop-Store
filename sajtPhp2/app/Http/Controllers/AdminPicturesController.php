@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PicturesRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,7 +44,7 @@ class AdminPicturesController extends OsnovniController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PicturesRequest $request)
     {
         $this->cutImage($request);
         $data = $request->input();
@@ -100,7 +101,7 @@ class AdminPicturesController extends OsnovniController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PicturesRequest $request, string $id)
     {
         $this->cutImage($request);
         $data = $request->input();
@@ -123,6 +124,7 @@ class AdminPicturesController extends OsnovniController
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('pictures')->where('id', $id)->delete();
+        return redirect()->route('table', ['name' => 'pictures']);
     }
 }

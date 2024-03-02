@@ -9,7 +9,16 @@
     <div class="min-vh-100 mt-4">
         <div class="col-sm-12 col-xl-6 mx-auto">
             <div class="bg-secondary rounded h-100 p-4">
-                <h6 class="mb-4">Insert</h6>
+                <h6 class="mb-4">Update</h6>
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li> {{$error}}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form action="{{route($name.'.update', [$id])}}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -112,7 +121,7 @@
 
 
                     @endforeach
-                    <input type="submit" class="btn btn-success" value="Submit">
+                    <input type="submit" class="btn btn-success" value="Update">
 
                 </form>
             </div>

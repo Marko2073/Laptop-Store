@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MenuRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -36,7 +37,7 @@ class AdminMenusController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(MenuRequest $request)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -79,9 +80,18 @@ class AdminMenusController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(MenuRequest $request, string $id)
     {
-        //
+        $data = $request->input();
+        if(isset($data['_token'])){
+            unset($data['_token']);
+        }
+        if(isset($data['_method'])){
+            unset($data['_method']);
+        }
+        $data['updated_at'] = date('Y-m-d H:i:s', strtotime('now'));
+        DB::table('menus')->where('id', $id)->update($data);
+        return redirect()->route('table', ['name' => 'menus']);
     }
 
     /**
@@ -89,6 +99,7 @@ class AdminMenusController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('menus')->where('id', $id)->delete();
+        return redirect()->route('table', ['name' => 'menus']);
     }
 }

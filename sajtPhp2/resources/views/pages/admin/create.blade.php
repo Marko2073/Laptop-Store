@@ -10,6 +10,15 @@
     <div class="col-sm-12 col-xl-6 mx-auto">
         <div class="bg-secondary rounded h-100 p-4">
             <h6 class="mb-4">Insert</h6>
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li> {{$error}}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form action="{{route($name.'.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
 
@@ -120,7 +129,7 @@
 
 
                 @endforeach
-                <input type="submit" class="btn btn-success" value="Submit">
+                <input type="submit" class="btn btn-success" value="Insert">
 
             </form>
         </div>

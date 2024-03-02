@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PriceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,7 +44,7 @@ class AdminPricesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PriceRequest $request)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -97,7 +98,7 @@ class AdminPricesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PriceRequest $request, string $id)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -118,6 +119,9 @@ class AdminPricesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('prices')
+            ->where('id', $id)
+            ->delete();
+        return redirect()->route('table', ['name' => 'prices']);
     }
 }

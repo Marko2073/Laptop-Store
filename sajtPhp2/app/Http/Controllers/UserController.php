@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CardRequest;
+use App\Http\Requests\CreditCardRequest;
 use App\Models\Credit_card;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ class UserController extends Controller
         return $usercard;
 
     }
-    public function storecard(Request $request)
+    public function storecard(CardRequest $request)
     {
         $card = new Credit_card();
         $card->card_number = $request->input('cardnumber');
@@ -31,9 +33,10 @@ class UserController extends Controller
         $card->cvv = $request->input('cvv');
         $card->user_id = session()->get('user')->id;
         $card->save();
-        return redirect()->route('profile');
+
+/*        return redirect()->route('profile');*/
     }
-    public function updatecard(Request $request)
+    public function updatecard(CardRequest $request)
     {
         $card = Credit_card::find($request->input('cardid'));
         $card->card_number = $request->input('cardnumber');

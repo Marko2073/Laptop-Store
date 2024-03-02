@@ -22,7 +22,7 @@
 </div>
 
 <!-- JavaScript Libraries -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{asset('assets/adminAsset/lib/chart/chart.min.js')}}"></script>
 <script src="{{asset('assets/adminAsset/lib/easing/easing.min.js')}}"></script>
@@ -32,8 +32,30 @@
 <script src="{{asset('assets/adminAsset/lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
 <script src="{{asset('assets/adminAsset/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script >
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+
 <!-- Template Javascript -->
 <script src="{{asset('assets/adminAsset/js/main.js')}}"></script>
+<script src="{{asset('assets/adminAsset/js/adminScript.js')}}"></script>
 
 </body>
 

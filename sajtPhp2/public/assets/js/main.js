@@ -492,3 +492,5 @@ if(window.location.pathname=='/cart'){
     }, 700);
  }
 
+
+

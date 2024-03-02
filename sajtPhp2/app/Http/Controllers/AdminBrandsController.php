@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NameRequest;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,7 @@ class AdminBrandsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(NameRequest $request)
     {
 
         $data = $request->input();
@@ -89,7 +90,7 @@ class AdminBrandsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(NameRequest $request, string $id)
     {
         $data = $request->input();
         if(isset($data['_token'])){
@@ -112,6 +113,9 @@ class AdminBrandsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        DB::table('brands')->where('id', $id)->delete();
+
+        return redirect()->route('table', ['name' => 'brands']);
     }
 }

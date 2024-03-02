@@ -32,9 +32,14 @@
                 <div class="modal-body">
                     <p>You can view your orders on your profile in the order history section!</p>
                 </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <a href="/" class="btn btn-success mr-2">Go to home page</a>
+                    <a href="/profile" class="btn btn-success ml-2">Go to your Profile</a>
+                </div>
             </div>
         </div>
     </div>
+
 
 
     <!-- Checkout Start -->

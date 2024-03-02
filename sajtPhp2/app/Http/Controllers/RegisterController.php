@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImageRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -23,6 +24,7 @@ class RegisterController extends OsnovniController
         $email = $request->email;
         $phone = $request->phone;
         $address = $request->address;
+        $path = 'avatarUser.png';
         $city = $request->city;
         $password = md5($request->password);
         $role_id = 2;
@@ -36,6 +38,7 @@ class RegisterController extends OsnovniController
         $user->email = $email;
         $user->phone = $phone;
         $user->address = $address;
+        $user->path = $path;
         $user->city = $city;
         $user->password = $password;
         $user->role_id = $role_id;
@@ -52,12 +55,13 @@ class RegisterController extends OsnovniController
         $user->lastname = $request->input('lastname');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
+
         $user->address = $request->input('address');
         $user->city = $request->input('city');
         $user->save();
         return redirect()->route('profile');
     }
-    public function updatepicture(Request $request){
+    public function updatepicture(ImageRequest $request){
         $user = User::find(session()->get('user')->id);
             $this->cutImage($request);
             $image = $request->file('path')->getClientOriginalName();

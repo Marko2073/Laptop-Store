@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +41,7 @@ class AdminUsersController extends OsnovniController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
 
         if($request->hasFile('path')){
@@ -94,7 +96,7 @@ class AdminUsersController extends OsnovniController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
         if($request->hasFile('path')){
             $this->cutImage($request);
@@ -122,6 +124,7 @@ class AdminUsersController extends OsnovniController
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('users')->where('id', $id)->delete();
+        return redirect()->route('table', ['name' => 'users']);
     }
 }

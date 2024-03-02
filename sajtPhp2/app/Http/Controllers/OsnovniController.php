@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImageRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Nette\Utils\Image;
 
 
 class OsnovniController extends Controller
 {
-    function cutImage(Request $request, $profile = false)
+    function cutImage(ImageRequest $request, $profile = false)
     {
         $file = $request->file('path');
         $tmpPath = $file->getPathname();

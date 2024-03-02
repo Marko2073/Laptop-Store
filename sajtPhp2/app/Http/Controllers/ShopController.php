@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderMail;
 use App\Models\Brand;
 use App\Models\ModelSpec;
 use App\Models\Purchase;
@@ -11,6 +12,7 @@ use App\Models\User_cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Modeli;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Database\Query\Builder;
 
@@ -160,38 +162,72 @@ class ShopController extends OsnovniController
         return response()->json($products);
     }
     public function orderproducts(Request $request){
-        $data= $request->input('cart');
-        $card=$request->input('card');
-        $id = session()->get('user')->id;
-        $idU=DB::table('user_cart')->insertGetId([
-            'user_id' => $id,
-            'created_at' => date('Y-m-d H:i:s'),
-        ]);
-         foreach ($data as $d){
-             DB ::table('purchases')->insert([
-                 'user_cart_id' => $idU,
-                 'model_specification_id' => $d['id'],
-                 'quantity' => $d['quantity'],
-                 'payment_method' => $card
-             ]);
-         }
-         foreach ($data as $d){
-             $quantity = DB::table('model_specification')
-                 ->select('stockQuantity')
-                 ->where('id', $d['id'])
-                 ->get()
-                 ->first();
-             $newQuantity = $quantity->stockQuantity - $d['quantity'];
-             DB::table('model_specification')
-                 ->where('id', $d['id'])
-                 ->update(['stockQuantity' => $newQuantity]);
-         }
+        DB::beginTransaction();
 
-        return response()->json(['message' => 'Success']);
+        try {
+            $data = $request->input('cart');
+            $card = $request->input('card');
+            $id = session()->get('user')->id;
+            $idU = DB::table('user_cart')->insertGetId([
+                'user_id' => $id,
+                'created_at' => now(),
+            ]);
+
+            foreach ($data as $d) {
+                DB::table('purchases')->insert([
+                    'user_cart_id' => $idU,
+                    'model_specification_id' => $d['id'],
+                    'quantity' => $d['quantity'],
+                    'payment_method' => $card
+                ]);
+            }
+
+            foreach ($data as $d) {
+                $quantity = DB::table('model_specification')
+                    ->select('stockQuantity')
+                    ->where('id', $d['id'])
+                    ->lockForUpdate()
+                    ->first();
+
+                $newQuantity = $quantity->stockQuantity - $d['quantity'];
+                DB::table('model_specification')
+                    ->where('id', $d['id'])
+                    ->update(['stockQuantity' => $newQuantity]);
+            }
+
+            DB::commit();
+            $user = User::find($id);
+            $subject = 'Order';
+
+            $poruka = 'Your order has been successfully placed!';
+            $mail = $user->email;
+            $products = [];
+            $total = 0;
+            foreach ($data as $d) {
+                $product = DB::table('model_specification')
+                    ->join('models', 'model_specification.model_id', '=', 'models.id')
+                    ->join('brands', 'models.brand_id', '=', 'brands.id')
+                    ->join('pictures', 'model_specification.id', '=', 'pictures.model_specification_id')
+                    ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
+                    ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price')
+                    ->where('model_specification.id', $d['id'])
+                    ->first();
+                $product->quantity = $d['quantity'];
+                array_push($products, $product);
+                $total += $product->price * $d['quantity'];
+            }
 
 
 
 
+            Mail::to($mail)->send(new OrderMail($user, $subject, $poruka, $mail, $products, $data, $total));
+
+            return response()->json(['message' => 'Success']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
+
 
 }

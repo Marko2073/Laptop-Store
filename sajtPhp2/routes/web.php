@@ -43,6 +43,7 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/store', [RegisterController::class, 'store'])->name('store');
 Route::post('/updateuser', [RegisterController::class, 'updateuser'])->name('updateuser');
 Route::post('/updatepicture', [RegisterController::class, 'updatepicture'])->name('updatepicture');
+Route::post('/mailto', [ContactController::class, 'mailto'])->name('mailto');
 
 Route::post('/storecard', [UserController::class, 'storecard'])->name('storecard');
 Route::post('/updatecard', [UserController::class, 'updatecard'])->name('updatecard');
