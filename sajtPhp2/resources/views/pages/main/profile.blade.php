@@ -1,6 +1,6 @@
 @extends('layouts.layout')
-@section('title') Home @endsection
-@section('description') The main page of the shop. @endsection
+@section('title') User profile @endsection
+@section('description') User profile page @endsection
 @section('keywords') shop, online, home, best, sellers @endsection
 
 

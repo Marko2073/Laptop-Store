@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prices', function (Blueprint $table) {
+        Schema::create('log_type', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('model_specification_id')->references('id')->on('model_specification');
-            $table->decimal('price', 8, 2);
-            $table->date('date_from');
-            $table->date('date_to');
-
-
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prices');
+        Schema::dropIfExists('log_type');
     }
 };

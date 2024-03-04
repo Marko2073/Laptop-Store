@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminModelSpecificationController;
 use App\Http\Controllers\AdminPicturesController;
+use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\AdminSpecificationsController;
 use App\Http\Controllers\AdminSpecificationsIndividualyController;
 use App\Http\Controllers\AdminUsersController;
@@ -47,6 +48,7 @@ Route::post('/mailto', [ContactController::class, 'mailto'])->name('mailto');
 
 Route::post('/storecard', [UserController::class, 'storecard'])->name('storecard');
 Route::post('/updatecard', [UserController::class, 'updatecard'])->name('updatecard');
+Route::post('/addreview', [UserController::class, 'addreview'])->name('addreview');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/cart', [ShopController::class, 'cart'])->name('cart');
@@ -55,7 +57,23 @@ Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
 
 
 
-Route::get('/admin', [AdminController::class, 'admin'])->name('admin');
+Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    Route::get('/admin', [AdminController::class, 'admin'])->name('admin');
+    Route::get('/admin/{name}', [AdminController::class, 'table'])->name('table');
+    Route::resource('/brands', AdminBrandsController::class);
+    Route::resource('/models', AdminModelsController::class);
+    Route::resource('/menus', AdminMenusController::class);
+    Route::resource('/model_specification', AdminModelSpecificationController::class);
+    Route::resource('/pictures', AdminPicturesController::class);
+    Route::resource('/prices', AdminPricesController::class);
+    Route::resource('/roles', AdminRolesController::class);
+    Route::resource('/specifications', AdminSpecificationsController::class);
+    Route::resource('/specifications_individually', AdminSpecificationsIndividualyController::class);
+    Route::resource('users', AdminUsersController::class);
+    Route::resource('/reviews', AdminReviewController::class);
+});
+
+/*Route::get('/admin', [AdminController::class, 'admin'])->name('admin');
 Route::get('/admin/{name}', [AdminController::class, 'table'])->name('table');
 
 
@@ -68,7 +86,7 @@ Route::resource('/prices', AdminPricesController::class);
 Route::resource('/roles', AdminRolesController::class);
 Route::resource('/specifications', AdminSpecificationsController::class);
 Route::resource('/specifications_individually', AdminSpecificationsIndividualyController::class);
-Route::resource('users', AdminUsersController::class);
+Route::resource('users', AdminUsersController::class);*/
 
 
 

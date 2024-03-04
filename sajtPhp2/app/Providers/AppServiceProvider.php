@@ -31,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
             'user_cart',
             'purchases',
             'credit_cards',
+            'log',
+            'log_type',
+
 
 
         ];

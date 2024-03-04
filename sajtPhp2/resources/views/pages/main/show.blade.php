@@ -1,8 +1,8 @@
 
 @extends('layouts.layout')
 
-@section('title') Home @endsection
-@section('description') The main page of the shop. @endsection
+@section('title'){{$product->brand_name. ' ' . $product->name }}@endsection
+@section('description')' Single page'@endsection
 @section('keywords') shop, online, home, best, sellers @endsection
 
 
@@ -12,18 +12,24 @@
     <div class="row px-xl-5">
         <div class="col-lg-5 mb-30">
             <div id="product-carousel" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner bg-light">
-                    <div class="carousel-item active">
-                        <img class="w-100 h-100" src="{{$product->picture}}" alt="Image">
-                    </div>
+                <div class="carousel-inner">
+                    @foreach($pictures as $index => $picture)
+                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                            <img src="{{ asset($picture->path) }}" alt="Product Image" class="d-block w-100">
+                        </div>
+                    @endforeach
                 </div>
-                <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
-                    <i class="fa fa-2x fa-angle-left text-dark"></i>
+                <a class="carousel-control-prev" href="#product-carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
                 </a>
-                <a class="carousel-control-next" href="#product-carousel" data-slide="next">
-                    <i class="fa fa-2x fa-angle-right text-dark"></i>
+                <a class="carousel-control-next" href="#product-carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
                 </a>
             </div>
+
+
         </div>
 
         <div class="col-lg-7 h-auto mb-30">
@@ -45,7 +51,10 @@
                 </div>
 
 
-                <h3 class="font-weight-bold mb-2 ">${{$product->price}}</h3>
+                <h3 class="font-weight-bold mb-2 ">${{$product->current_price}}</h3>
+                @if($product->old_price != null)
+                    <h5 class=" text-decoration-line-through">${{$product->old_price}}</h5>
+                @endif
                 @php
                     $stock = $product->stock;
                     $colorClass = '';
@@ -111,7 +120,7 @@
             <div class="bg-light p-30">
                 <div class="nav nav-tabs mb-4">
                     <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Specifications</a>
-                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Reviews (0)</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Reviews ({{$countReviews}})</a>
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
@@ -135,8 +144,26 @@
                     <div class="tab-pane fade" id="tab-pane-3">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-4">1 review for "Product Name"</h4>
-                                <div class="media mb-4">
+                                <h4 class="mb-4">{{$countReviews }} reviews for {{$product->brand_name. ' '. $product->name}}</h4>
+                                @if($countReviews == 0)
+                                    <p>There are no reviews for this product.</p>
+                                @else
+                                @foreach($reviews as $r)
+
+                                    <div class="media mb-4">
+                                        <img src="{{asset('assets/img/products-resize/'. $r->path)}}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                        <div class="media-body">
+                                            <h6>{{$r->name}}<small> - <i>{{$r->created_at}}</i></small></h6>
+
+                                            <p>{{$r->content}}</p>
+                                        </div>
+                                    </div>
+
+
+                                @endforeach
+                                    {{$reviews->links()}}
+                                @endif
+                                {{--<div class="media mb-4">
                                     <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                     <div class="media-body">
                                         <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
@@ -150,37 +177,42 @@
                                         <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
                                     </div>
                                 </div>
+                                <div class="media mb-4">
+                                    <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                    <div class="media-body">
+                                        <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
+                                        <div class="text-primary mb-2">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                        <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
+                                    </div>
+                                </div>--}}
                             </div>
                             <div class="col-md-6">
+
+                                @if(session()->has('user'))
                                 <h4 class="mb-4">Leave a review</h4>
                                 <small>Your email address will not be published. Required fields are marked *</small>
-                                <div class="d-flex my-3">
-                                    <p class="mb-0 mr-2">Your Rating * :</p>
-                                    <div class="text-primary">
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                    </div>
-                                </div>
-                                <form>
+                                <form action="{{route('addreview')}}" method="POST">
+                                    @csrf
                                     <div class="form-group">
                                         <label for="message">Your Review *</label>
-                                        <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
+                                        <textarea id="message" cols="30" rows="5" class="form-control" name="userreview"></textarea>
+                                        <input type="hidden" name="product_id" value="{{$product->id}}">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="name">Your Name *</label>
-                                        <input type="text" class="form-control" id="name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Your Email *</label>
-                                        <input type="email" class="form-control" id="email">
-                                    </div>
+
                                     <div class="form-group mb-0">
                                         <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
                                     </div>
                                 </form>
+                                @else
+                                    <h4 class="mb-4">Leave a review</h4>
+                                    <p>You must be logged in to leave a review.</p>
+                                @endif
                             </div>
                         </div>
                     </div>

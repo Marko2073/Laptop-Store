@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CardRequest;
 use App\Http\Requests\CreditCardRequest;
 use App\Models\Credit_card;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -45,6 +46,16 @@ class UserController extends Controller
         $card->cvv = $request->input('cvv');
         $card->save();
         return redirect()->route('profile');
+    }
+
+    public function addreview(Request $request)
+    {
+        $review = new Review();
+        $review->user_id = session()->get('user')->id;
+        $review->model_specification_id = $request->input('product_id');
+        $review->content = $request->input('userreview');
+        $review->save();
+        return redirect()->route('show', $request->input('product_id'));
     }
 
 

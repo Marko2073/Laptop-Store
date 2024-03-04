@@ -7,7 +7,9 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends OsnovniController
 {
@@ -43,6 +45,13 @@ class RegisterController extends OsnovniController
         $user->password = $password;
         $user->role_id = $role_id;
         $user->save();
+
+        DB::table('log')->insert([
+            'log_type_id' => 2,
+            'user_id' => $user->id,
+            'description' => 'User ' . $user->firstname . ' ' . $user->lastname . ' has been registered.',
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
 
 
         return redirect()->route('login');

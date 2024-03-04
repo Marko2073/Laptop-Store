@@ -1,8 +1,6 @@
 @extends('layouts.adminlayout')
 
-@section('title') Home @endsection
-@section('description') The main page of the shop. @endsection
-@section('keywords') shop, online, home, best, sellers @endsection
+@section('title') Table {{$name}}@endsection
 
 
 @section('content')
@@ -24,7 +22,9 @@
     </div>
     <div class="col-12">
         <div class="bg-secondary rounded h-100 p-4">
+            @if($name!='reviews')
             <a href="{{route($name.'.create')}}" class="btn btn-success">Insert</a>
+            @endif
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -34,7 +34,9 @@
                             <th scope="col">{{ $column }}</th>
                             @endif
                         @endforeach
+                        @if($name!='reviews')
                         <th scope="col">Update</th>
+                        @endif
                         <th scope="col">Delete</th>
                     </tr>
                     </thead>
@@ -55,9 +57,11 @@
 
 
                             @endforeach
+                            @if($name!='reviews')
                             <td>
                                 <a href="{{route($name.'.edit',[$row->id])}}" class="btn btn-warning">Edit</a>
                             </td>
+                            @endif
                             <td>
                                 <button type="button" class="btn btn-danger brisiAdmin" data-IdBrisi="{{$row->id}}">Delete</button>
                             </td>

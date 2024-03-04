@@ -34,7 +34,22 @@ class ProductSeeder extends Seeder
             $id=DB::table('prices')->insertGetId([
                 'model_specification_id' => $product->id,
                 'price' => rand(5, 50),
+                'date_from' => date('Y-m-d', strtotime('-1 day')),
+                'date_to' => date('Y-m-d', strtotime('+1 year')),
+                'created_at' => date('Y-m-d H:i:s'),
+
             ]);
+            $i = rand(0,1);
+            if($i){
+                DB::table('prices')->insert([
+                    'model_specification_id' => $product->id,
+                    'price' => rand(5, 50),
+                    'date_from' => date('Y-m-d', strtotime('-2 year')),
+                    'date_to' => date('Y-m-d', strtotime('-1 day')),
+
+                ]);
+
+            }
         }
 
     }

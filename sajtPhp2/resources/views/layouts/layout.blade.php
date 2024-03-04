@@ -3,6 +3,8 @@
 
     @include('fixed.head')
 
+
+
 <body>
 
       @include('fixed.navigation')

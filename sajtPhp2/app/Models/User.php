@@ -37,5 +37,8 @@ class User extends Authenticatable
     public function usercarts(){
         return $this->hasMany(User_cart::class);
     }
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
 
 }

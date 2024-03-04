@@ -1,9 +1,6 @@
 @extends('layouts.adminlayout')
 
-@section('title') Home @endsection
-@section('description') The main page of the shop. @endsection
-@section('keywords') shop, online, home, best, sellers @endsection
-
+@section('title') Admin panel @endsection
 
 @section('content')
 
@@ -51,8 +48,40 @@
             </div>
         </div>
     </div>
-    <!-- Sale & Revenue End -->
 
+
+    <div class="container-fluid pt-4 px-4">
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4">Hoverable Table</h6>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Log</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($log as $l)
+                        <tr>
+                            <th scope="row">{{$l->log_type}}</th>
+                            <td>{{$l->name}}</td>
+                            <td>{{$l->surname}}</td>
+                            <td>{{$l->description}}</td>
+                        </tr>
+                    @endforeach
+
+                    </tbody>
+                </table>
+
+                {{$log->links()}}
+            </div>
+        </div>
+    </div>
+
+{{--
 
     <!-- Sales Chart Start -->
     <div class="container-fluid pt-4 px-4">
@@ -274,6 +303,7 @@
         </div>
     </div>
     <!-- Widgets End -->
+--}}
 
 
 @endsection

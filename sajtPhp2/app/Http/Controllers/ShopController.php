@@ -12,6 +12,7 @@ use App\Models\User_cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Modeli;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Database\Query\Builder;
@@ -26,17 +27,27 @@ class ShopController extends OsnovniController
         $names = Specification::all()->where('parent_id', null);
         $specifications = Specification::all()->where('parent_id','!=',null);
 
-        $products = DB::table('model_specification')
-            ->join('models', 'model_specification.model_id', '=', 'models.id')
-            ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->join('pictures', 'model_specification.id', '=', 'pictures.model_specification_id')
-            ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
+            $products = DB::table('model_specification')
+                ->join('models', 'model_specification.model_id', '=', 'models.id')
+                ->join('brands', 'models.brand_id', '=', 'brands.id')
+                ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
 
-            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'model_specification.stockQuantity as stock')
-            ->distinct()
-            ->paginate(12);
+                ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id',  'prices.price as current_price', 'model_specification.stockQuantity as stock')
 
-        $new = DB::table('model_specification')
+                ->addSelect(DB::raw('(SELECT price FROM prices AS p2 WHERE p2.model_specification_id = model_specification.id AND p2.date_to < NOW() ORDER BY p2.date_to DESC LIMIT 1) AS old_price'))
+                ->distinct()
+                ->where('prices.date_to', '>', now())
+                ->paginate(12);
+            foreach ($products as $product){
+                $picture = DB::table('pictures')
+                    ->select('path')
+                    ->where('model_specification_id', $product->model_specification_id)
+                    ->first();
+                $product->picture = $picture->path;
+
+            }
+
+            $new = DB::table('model_specification')
             ->join('specifications_individually', 'model_specification.id', '=', 'specifications_individually.model_specification_id')
             ->join('specifications', 'specifications.id', '=', 'specifications_individually.specification_id')
             ->whereIn('specifications.name', ['Yes', 'No'])
@@ -55,7 +66,6 @@ class ShopController extends OsnovniController
             $products = DB::table('model_specification')
                 ->join('models', 'model_specification.model_id', '=', 'models.id')
                 ->join('brands', 'models.brand_id', '=', 'brands.id')
-                ->join('pictures', 'model_specification.id', '=', 'pictures.model_specification_id')
                 ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
                 ->distinct();
             foreach ($data as $key => $value){
@@ -85,7 +95,8 @@ class ShopController extends OsnovniController
 
             }
 
-            $products=$products->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'models.name as name', 'model_specification.stockQuantity as stock');
+            $products=$products->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id',  'prices.price as price', 'models.name as name', 'model_specification.stockQuantity as stock', 'prices.price as current_price')
+                ->addSelect(DB::raw('(SELECT price FROM prices AS p2 WHERE p2.model_specification_id = model_specification.id AND p2.date_to < NOW() ORDER BY p2.date_to DESC LIMIT 1) AS old_price'));
             if($request->input('sort')!=null)
             {
                 $sort = $request->input('sort');
@@ -96,8 +107,18 @@ class ShopController extends OsnovniController
                     $products=$products->orderBy('brands.name', 'desc');
                 }
             }
+            $products=$products->where('prices.date_to', '>', now());
+
 
             $products=$products->paginate(12);
+            foreach ($products as $product){
+                $picture = DB::table('pictures')
+                    ->select('path')
+                    ->where('model_specification_id', $product->model_specification_id)
+                    ->first();
+                $product->picture = $picture->path;
+
+            }
             $new = [];
             foreach ($products as $product){
                 $n = DB::table('model_specification')
@@ -122,11 +143,17 @@ class ShopController extends OsnovniController
         $product = DB::table('model_specification')
             ->join('models', 'model_specification.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->join('pictures', 'model_specification.id', '=', 'pictures.model_specification_id')
-            ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
-            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'model_specification.stockQuantity as stock')
-            ->where('model_specification.id', $id)
+            ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id');
+        $product=$product->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id',  'prices.price as price', 'models.name as name', 'model_specification.stockQuantity as stock', 'prices.price as current_price')
+            ->addSelect(DB::raw('(SELECT price FROM prices AS p2 WHERE p2.model_specification_id = model_specification.id AND p2.date_to < NOW() ORDER BY p2.date_to DESC LIMIT 1) AS old_price'));
+        $product=$product->where('model_specification.id', $id);
+            $product=$product->where('prices.date_to', '>', now())
             ->first();
+        $pictures = DB::table('pictures')
+            ->select('path')
+            ->where('model_specification_id', $id)
+            ->get();
+
         $specifications = DB::table('specifications')
             ->join('specifications_individually', 'specifications.id', '=', 'specifications_individually.specification_id')
             ->select('specifications.*')
@@ -134,11 +161,22 @@ class ShopController extends OsnovniController
             ->get();
         $names = DB::table('specifications')->where('parent_id', null)->get();
         $data= [];
+        $reviews = DB::table('reviews')
+            ->join('users', 'reviews.user_id', '=', 'users.id')
+            ->select('reviews.*', 'users.firstname as name', 'users.lastname as surname', 'users.path as path')
+            ->where('model_specification_id', $id)
+            ->paginate(5);
+
+        $countReviews = DB::table('reviews')
+            ->where('model_specification_id', $id)
+            ->count();
 
 
 
 
-        return view('pages.main.show', ['product' => $product, 'specifications' => $specifications, 'names' => $names, 'data' => $data]);
+
+
+        return view('pages.main.show', ['product' => $product, 'specifications' => $specifications, 'names' => $names, 'data' => $data, 'reviews' => $reviews, 'countReviews' => $countReviews, 'pictures' => $pictures]);
     }
 
     public function cart(){
@@ -219,6 +257,12 @@ class ShopController extends OsnovniController
 
 
 
+            DB::table('log')->insert([
+                'log_type_id' => 4,
+                'user_id' => $id,
+                'description' => 'User ' . $user->firstname . ' ' . $user->lastname . ' has placed an order.',
+                'created_at' => now()
+            ]);
 
             Mail::to($mail)->send(new OrderMail($user, $subject, $poruka, $mail, $products, $data, $total));
 

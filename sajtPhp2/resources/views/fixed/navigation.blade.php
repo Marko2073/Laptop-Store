@@ -36,9 +36,7 @@
 
             </div>
             <div class="d-inline-flex align-items-center d-block d-lg-none">
-                <a href="" class="btn px-0 ml-2">
-                    <i class="fas fa-heart text-dark"></i>
-                </a>
+
                 <a href="/cart" class="btn px-0 ml-2">
                     <i class="fas fa-shopping-cart text-dark"></i>
                 </a>
@@ -47,9 +45,9 @@
     </div>
     <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
         <div class="col-lg-4">
-            <a href="" class="text-decoration-none">
-                <span class="h1 text-uppercase text-primary bg-dark px-2">Multi</span>
-                <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Shop</span>
+            <a href="/" class="text-decoration-none">
+                <span class="h1 text-uppercase text-primary bg-dark px-2">Laptop</span>
+                <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Store</span>
             </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
@@ -66,7 +64,7 @@
         </div>
         <div class="col-lg-4 col-6 text-right">
             <p class="m-0">Customer Service</p>
-            <h5 class="m-0">+012 345 6789</h5>
+            <h5 class="m-0">+3816298632</h5>
         </div>
     </div>
 </div>
@@ -78,9 +76,9 @@
 
         <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
-                    <span class="h1 text-uppercase text-dark bg-light px-2">Multi</span>
-                    <span class="h1 text-uppercase text-light bg-primary px-2 ml-n1">Shop</span>
+                <a href="/" class="text-decoration-none d-block d-lg-none">
+                    <span class="h1 text-uppercase text-dark bg-light px-2">Laptop</span>
+                    <span class="h1 text-uppercase text-light bg-primary px-2 ml-n1">Store</span>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
@@ -112,7 +110,10 @@
         <i class="fas fa-shopping-cart mr-2"></i>Your Cart
     </div>
     <div class="card-body bg-light">
-        <!-- Ovdje se prikazuju informacije o košarici -->
+        <div id="loader" class="text-center mt-3 d-flex justify-content-center" style="width: 100px;">
+            <img src="{{asset('assets/img/loading-loading-forever.gif')}}" alt="Loading..." style="width: 100px;" class="mx-auto my-auto"/>
+        </div>
+
     </div>
 </div>
 <!-- Navbar End -->

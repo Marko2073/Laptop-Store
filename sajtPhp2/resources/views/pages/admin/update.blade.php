@@ -1,8 +1,6 @@
 @extends('layouts.adminlayout')
 
-@section('title') Home @endsection
-@section('description') The main page of the shop. @endsection
-@section('keywords') shop, online, home, best, sellers @endsection
+@section('title') Update @endsection
 
 
 @section('content')
@@ -70,7 +68,7 @@
                             <div class="mb-3">
                                 <label for="exampleInputEmail1" class="form-label
                                 ">{{$c}}</label>
-                                <select class="form-select mb-3" aria-label="Default select example" disabled name="{{$c}}" id="{{$c}}">
+                                <select class="form-select mb-3" aria-label="Default select example"  name="{{$c}}" id="{{$c}}">
                                     <option value="0">Choose...</option>
                                     @foreach($model_specification as $ms)
                                         <option value="{{$ms->id}}" @if($picture->model_specification_id == $ms->id) selected @endif>{{$ms->brand_name. ' ' .$ms->model_name}}</option>

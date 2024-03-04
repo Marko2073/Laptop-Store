@@ -37,8 +37,9 @@ class HomeController extends OsnovniController
             ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
             ->join('specifications_individually', 'model_specification.id', '=', 'specifications_individually.model_specification_id')
             ->join('specifications', 'specifications.id', '=', 'specifications_individually.specification_id')
-            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'model_specification.stockQuantity as stock')
-
+            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'models.name as name', 'model_specification.stockQuantity as stock', 'prices.price as current_price')
+            ->addSelect(DB::raw('(SELECT price FROM prices AS p2 WHERE p2.model_specification_id = model_specification.id AND p2.date_to < NOW() ORDER BY p2.date_to DESC LIMIT 1) AS old_price'))
+            ->where('prices.date_to', '>', now())
             ->distinct()
             ->inRandomOrder($seed)
             ->take(3)

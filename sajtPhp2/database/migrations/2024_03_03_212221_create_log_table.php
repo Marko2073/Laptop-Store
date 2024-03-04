@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prices', function (Blueprint $table) {
+        Schema::create('log', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('model_specification_id')->references('id')->on('model_specification');
-            $table->decimal('price', 8, 2);
-            $table->date('date_from');
-            $table->date('date_to');
-
+            $table->foreignId('log_type_id')->references('id')->on('log_type');
+            $table->foreignId('user_id')->constrained();
+            $table->string('description');
 
             $table->timestamps();
         });
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prices');
+        Schema::dropIfExists('log');
     }
 };

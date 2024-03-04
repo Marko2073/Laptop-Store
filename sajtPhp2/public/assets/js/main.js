@@ -191,11 +191,21 @@ $(document).ready(function(){
 
  var hoverCart = document.getElementById('hoverCart');
  var cartInfo = document.getElementById('cartInfo');
+ var loader = document.getElementById('loader');
+
+ function displayLoader() {
+     loader.style.display = 'block';
+ }
+
+ function hideLoader() {
+     loader.style.display = 'none';
+ }
 
  function displayCartInfo() {
      var products = JSON.parse(localStorage.getItem('cart')) || [];
 
      if (products.length > 0) {
+         displayLoader(); // Prikaži loader pre AJAX poziva
          $.ajax({
              url: '/api/products',
              method: 'GET',
@@ -223,9 +233,14 @@ $(document).ready(function(){
                      </div>
                  `;
                  cartInfo.querySelector('.card-body').innerHTML = html;
+                 hideLoader(); // Sakrij loader nakon što se AJAX uspešno završi
+             },
+             error: function() {
+                 hideLoader(); // Sakrij loader u slučaju greške
              }
          });
-     } else {
+     }
+     else {
          cartInfo.querySelector('.card-body').innerHTML = '<p class="text-muted">Your cart is empty.</p>';
      }
  }
@@ -252,6 +267,13 @@ $(document).ready(function(){
 
 if(window.location.pathname=='/checkout'){
 $(document).ready(function(){
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        if(cart.length==0){
+            window.location.href = '/shop';
+        }
+
+
+
         var modal = document.getElementById("purchaseModal");
 
         function closeModal() {
@@ -547,35 +569,24 @@ if(window.location.pathname=='/cart'){
          $('.quantityInput').on('change', function() {
             var id = this.getAttribute('data-prId');
             var cart = JSON.parse(localStorage.getItem('cart'));
-            var max = this.getAttribute('max');
-            var min = this.getAttribute('min');
+            var max = parseInt(this.getAttribute('max'));
+                var min = parseInt(this.getAttribute('min'));
             for(var i=0; i<cart.length; i++){
                 if(cart[i].id==id){
                     if(this.value>max){
                         toastr.error('Not enough stock');
                         this.value=max;
-                        cart[i].quantity=this.value;
+
+                        cart[i].quantity=max;
                         break;
                     }
                     else if(this.value<min){
                         toastr.error('Minimum quantity is 1');
                         this.value=min;
-                        cart[i].quantity=this.value;
+                        cart[i].quantity=min;
                         break;
                     }
-                    else if(this.value==min){
-                    this.value=min;
-                    cart[i].quantity=this.value;
-                    toastr.error('Minimum quantity is 1');
-                    break;
 
-                    }
-                    else if(this.value==max){
-                    this.value=max;
-                    cart[i].quantity=this.value;
-                    toastr.error('Not enough stock');
-                    break;
-                    }
                     else{
                     cart[i].quantity=this.value;
                     break;

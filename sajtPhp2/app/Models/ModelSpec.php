@@ -21,4 +21,8 @@ class ModelSpec extends Model
     public function purchases(){
         return $this->hasMany(Purchase::class);
     }
+
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
 }

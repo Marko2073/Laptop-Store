@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
-@section('title') Home @endsection
-@section('description') The main page of the shop. @endsection
+@section('title') Login @endsection
+@section('description')Login page @endsection
 @section('keywords') shop, online, home, best, sellers @endsection
 
 
@@ -38,7 +38,7 @@
 
                             <div class="col-md-6 form-group mx-auto">
 
-                                <input type="submit" value="Register" class="btn btn-block btn-primary font-weight-bold py-3">
+                                <input type="submit" value="Login" class="btn btn-block btn-primary font-weight-bold py-3">
                             </div>
 
 

@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
-@section('title') Home @endsection
-@section('description') The main page of the shop. @endsection
+@section('title') Shop @endsection
+@section('description') Shop page @endsection
 @section('keywords') shop, online, home, best, sellers @endsection
 
 
@@ -82,7 +82,6 @@
 
                                                         />
                                                         <label class="custom-control-label" for="price-{{$s->id}}">{{$s->name}}</label>
-                                                        <span class="badge border font-weight-normal">150</span>
                                                     </div>
                                                 @endif
                                             @endforeach
@@ -146,7 +145,7 @@
                                 <div class="text-center py-4">
                                     <a class="h6 text-decoration-none text-truncate" href="{{route('show',$product->model_specification_id)}}">{{$product->brand_name. ' ' . $product->name}}</a>
                                     <div class="d-flex align-items-center justify-content-center mt-2">
-                                        <h5>{{$product->price}}</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+                                        <h5>{{$product->current_price}}</h5><h6 class="text-muted ml-2"><del>{{$product->old_price}}</del></h6>
                                     </div>
 
                                 </div>

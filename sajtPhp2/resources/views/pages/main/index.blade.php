@@ -46,7 +46,10 @@
 
 
 
-                                    <h3 class="font-weight-semi-bold mb-4">${{$productsRandom[0]->price}}</h3>
+                                    <h3 class="font-weight-semi-bold mb-4">${{$productsRandom[0]->current_price}}</h3>
+                                    @if($productsRandom[0]->old_price )
+                                        <h5 class="font-weight-semi-bold mb-4"><del>${{$productsRandom[0]->old_price}}</del></h5>
+                                    @endif
                                     <p class="mb-4">Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam stet sit
                                         clita ea. Sanc ipsum et, labore clita lorem magna duo dolor no sea
 
@@ -80,8 +83,10 @@
                                 <div class="h-100 bg-light p-30">
                                     <h6>{{$productsRandom[1]->brand_name. ' ' . $productsRandom[1]->name }}</h6>
 
-                                    <h5 class="font-weight-semi-bold mb-4">${{$productsRandom[1]->price}}</h5>
-                                    <a href="/shop/{{$productsRandom[1]->model_specification_id}}" class="btn btn-primary px-3">More about</a>
+                                    <h5 class="font-weight-semi-bold mb-4">${{$productsRandom[1]->current_price}}</h5>
+                                    @if($productsRandom[1]->old_price )
+                                        <h6 class="font-weight-semi-bold mb-4"><del>${{$productsRandom[1]->old_price}}</del></h6>
+                                    @endif                                    <a href="/shop/{{$productsRandom[1]->model_specification_id}}" class="btn btn-primary px-3">More about</a>
 
                                 </div>
                             </div>
@@ -103,7 +108,10 @@
                                 <div class="h-100 bg-light p-30">
                                     <h6>{{$productsRandom[2]->brand_name. ' ' . $productsRandom[2]->name }}</h6>
 
-                                    <h5 class="font-weight-semi-bold mb-4">${{$productsRandom[2]->price}}</h5>
+                                    <h5 class="font-weight-semi-bold mb-4">${{$productsRandom[2]->current_price}}</h5>
+                                    @if($productsRandom[2]->old_price )
+                                        <h6 class="font-weight-semi-bold mb-4"><del>${{$productsRandom[2]->old_price}}</del></h6>
+                                    @endif
                                     <a href="/shop/{{$productsRandom[2]->model_specification_id}}" class="btn btn-primary px-3">More about</a>
                                 </div>
                             </div>
