@@ -111,6 +111,53 @@ $(document).ready(function(){
         });
                 $('.collapse.show').prev().find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-up');
 
+
+        var keyword = document.getElementById('keywordsSearch');
+        keyword.addEventListener('keyup', function(){
+            if(keyword.value.length >= 4){
+                $.ajax({
+                    url: '/api/products/' + keyword.value,
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response){
+                        var html = '';
+                        for (var i = 0; i < response.length; i++) {
+                            html += `<a href="/shop/${response[i].model_specification_id}" class="list-group-item list-group-item-action">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <img src="assets/img/products-resize/${response[i].picture}" class="img-fluid" alt="${response[i].name}">
+                                            </div>
+                                            <div class="col-md-8">
+                                                 <h5 class="mb-1">${response[i].brand_name}</h5>
+                                                <h5 class="mb-1">${response[i].name}</h5>
+                                                <strong>$${response[i].current_price}</strong>
+
+
+                                            </div>
+                                        </div>
+                                    </a>`;
+                        }
+                        document.getElementById('productStatus').innerHTML = html;
+                        if(response.length == 0){
+                            document.getElementById('productStatus').innerHTML = '<a href="#" class="list-group-item list-group-item-action">No results</a>';
+                        }
+
+                    },
+
+                    error: function(xhr, status, error){
+                        console.error(error); // Obrada grešaka
+                    }
+                });
+            }
+            else {
+                document.getElementById('productStatus').innerHTML = '';
+            }
+        });
+
+
+
     });
 
 
@@ -219,10 +266,10 @@ $(document).ready(function(){
                              html += `
                                  <div class="d-flex justify-content-between mb-2">
                                      <p>${products[i].quantity} x ${product.name}</p>
-                                     <p>${product.price}</p>
+                                     <p>${product.current_price}</p>
                                  </div>
                              `;
-                             totalPrice += product.price * products[i].quantity;
+                             totalPrice += product.current_price * products[i].quantity;
                          }
                      }
                  }
@@ -380,12 +427,12 @@ $(document).ready(function(){
                         for(var j=0; j<response.length; j++){
                             if(cart[i].id==response[j].model_specification_id){
                                 var product = response[j];
-                                totalPrice+=product.price*cart[i].quantity;
+                                totalPrice+=product.current_price*cart[i].quantity;
 
                                 divTotalOrder.innerHTML+=`<div class="d-flex justify-content-between">
-                                                                                      <p>${cart[i].quantity} x ${product.name}</p>
-                                                                                      <p>${product.price}</p>
-                                                                                  </div>`;
+                                                              <p>${cart[i].quantity} x ${product.name}</p>
+                                                              <p>${product.current_price}</p>
+                                                          </div>`;
                             }
                         }
 
@@ -487,9 +534,7 @@ var showModalBtn = document.getElementById("showModalBtn");
 }
 
 if(window.location.pathname=='/cart'){
-
-
-    $(document).ready(function(){
+$(document).ready(function(){
     function updateCart(){
         var cart = JSON.parse(localStorage.getItem('cart'));
         var element = document.getElementById('korpa');
@@ -509,97 +554,76 @@ if(window.location.pathname=='/cart'){
                         if(cart[i].id==products[j].model_specification_id){
                             var product = products[j];
                             html+='<tr>';
-                            html+='<td><img src="'+product.picture+'" alt="Image" class="img-fluid" style="width: 50px;"></td>';
+                            html+='<td><img src="assets/img/products-resize/'+product.picture+'" alt="Image" class="img-fluid" style="width: 50px;"></td>';
                             html+='<td>'+product.name+'</td>';
-                            html+='<td>'+product.price+'</td>';
+                            html+='<td>'+product.current_price+'</td>';
                             html+='<td><input type="number" class="quantityInput" min="1" max="'+product.stock+'" value="'+cart[i].quantity+'" data-prId="'+product.model_specification_id+'"></td>';
-                            html+='<td>'+product.price*cart[i].quantity+'</td>';
+                            html+='<td class="totalPriceSemi">'+product.current_price*cart[i].quantity+'</td>';
                             html+='<td><button class="btn btn-primary removebt" data-ProductId="'+product.model_specification_id+'">Remove</button></td>';
                             html+='</tr>';
-                            total+=product.price*cart[i].quantity;
+                            total+=product.current_price*cart[i].quantity;
 
                         }
                     }
                 }
                 html+='<tr>';
                 html+='<td colspan="4">Total</td>';
-                html+='<td>'+total+'</td>';
+                html+='<td id="totalPrice">'+total+'</td>'; // Dodajemo ID za ukupnu cijenu
                 html+='<td></td>';
                 html+='</tr>';
-
-
-                html+='</tbody></table>';
-
-
                 element.innerHTML = html;
-
             }
         });
 
-
-
-
-        var brojElemenataUKorpi=JSON.parse(localStorage.getItem('cart')).length;
-
-        var divCount = document.getElementById('korpaCount');
-        divCount.innerHTML = brojElemenataUKorpi;
-
     }
-    updateCart();
 
-    });
-    setTimeout(function(){
-    var dugmici = document.getElementsByClassName('removebt');
-        for (var i = 0; i < dugmici.length; i++) {
-            dugmici[i].addEventListener('click', function(){
-                var id = this.getAttribute('data-ProductId');
-                var cart = JSON.parse(localStorage.getItem('cart'));
-                for(var i=0; i<cart.length; i++){
-                    if(cart[i].id==id){
-                        cart.splice(i, 1);
-                        break;
-                    }
-                }
-                localStorage.setItem('cart', JSON.stringify(cart));
-
-                location.reload();
-            });
-        }
-
-         $('.quantityInput').on('change', function() {
-            var id = this.getAttribute('data-prId');
-            var cart = JSON.parse(localStorage.getItem('cart'));
-            var max = parseInt(this.getAttribute('max'));
-                var min = parseInt(this.getAttribute('min'));
-            for(var i=0; i<cart.length; i++){
-                if(cart[i].id==id){
-                    if(this.value>max){
-                        toastr.error('Not enough stock');
-                        this.value=max;
-
-                        cart[i].quantity=max;
-                        break;
-                    }
-                    else if(this.value<min){
-                        toastr.error('Minimum quantity is 1');
-                        this.value=min;
-                        cart[i].quantity=min;
-                        break;
-                    }
-
-                    else{
-                    cart[i].quantity=this.value;
-                    break;
-                    }
-                }
+    // Remove button event listener
+    $(document).on('click', '.removebt', function(){
+        var id = $(this).data('productid'); // Corrected data attribute name
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        for(var i=0; i<cart.length; i++){
+            if(cart[i].id == id){ // Corrected property name
+                cart.splice(i, 1);
+                break;
             }
-            localStorage.setItem('cart', JSON.stringify(cart));
-         });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCart(); // Update cart after removal
+    });
 
-    }, 700);
+    $(document).on('change', '.quantityInput', function() {
+        var id = $(this).data('prid');
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        var max = parseInt($(this).attr('max'));
+        var min = parseInt($(this).attr('min'));
+        for(var i=0; i<cart.length; i++){
+            if(cart[i].id==id){
+                if(this.value>max){
+                    toastr.error('Not enough stock');
+                    this.value=max;
+                    cart[i].quantity=max;
+                }
+                else if(this.value<min){
+                    toastr.error('Minimum quantity is 1');
+                    this.value=min;
+                    cart[i].quantity=min;
+                }
+                else{
+                    cart[i].quantity=this.value;
+                    $(this).closest('tr').find('.totalPriceSemi').text(cart[i].quantity * parseFloat($(this).closest('tr').find('td:eq(2)').text())); // Ažuriraj subtotal
+                }
+                break;
+            }
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCart(); // Ažuriraj košaricu nakon promjene količine
+    });
 
+    updateCart(); // Initial cart update
 
- }
+});
+}
+
 
 
 

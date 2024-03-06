@@ -62,7 +62,7 @@
                             <select class="form-select mb-3" aria-label="Default select example" name="{{$c}}" id="{{$c}}">
                                 <option value="0">Choose...</option>
                                 @foreach($models as $model)
-                                    <option value="{{$model->id}}">{{$model->name}}</option>
+                                    <option value="{{$model->id}}">{{$model->lizuckajGa}}</option>
                                 @endforeach
                             </select>
                         </div>

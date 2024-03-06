@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImageRequest;
 use App\Http\Requests\PicturesRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -101,8 +102,10 @@ class AdminPicturesController extends OsnovniController
     /**
      * Update the specified resource in storage.
      */
-    public function update(PicturesRequest $request, string $id)
+    public function update(ImageRequest $request, string $id)
     {
+
+
         $this->cutImage($request);
         $data = $request->input();
         $image = $request->file('path')->getClientOriginalName();

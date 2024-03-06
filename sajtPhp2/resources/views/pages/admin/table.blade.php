@@ -47,7 +47,8 @@
                                 @if($column!= 'password')
                                 @if($column=='path')
                                     <td>
-                                        {{$row->$column}}
+                                            <img src="{{asset('assets/img/products-resize/'.$row->$column)}}" alt="Image" class="" style="width: 75px;">
+
                                     </td>
                                 @else
                                     <td>{{ $row->$column }}</td>

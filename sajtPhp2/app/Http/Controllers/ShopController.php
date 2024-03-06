@@ -46,6 +46,19 @@ class ShopController extends OsnovniController
                 $product->picture = $picture->path;
 
             }
+            foreach ($products as $product){
+                $product->rating = DB::table('reviews')
+                    ->select(DB::raw('AVG(rating) as rating'))
+                    ->where('model_specification_id', $product->model_specification_id)
+                    ->first();
+                $product->rating = $product->rating->rating;
+                $numOfReviews = DB::table('reviews')
+                    ->where('model_specification_id', $product->model_specification_id)
+                    ->count();
+                $product->numOfReviews = $numOfReviews;
+
+
+            }
 
             $new = DB::table('model_specification')
             ->join('specifications_individually', 'model_specification.id', '=', 'specifications_individually.model_specification_id')
@@ -101,9 +114,15 @@ class ShopController extends OsnovniController
             {
                 $sort = $request->input('sort');
                 if($sort=='price'){
-                    $products=$products->orderBy('prices.price', 'desc');
+                    $products=$products->orderBy('prices.price', 'asc');
                 }
                 else if($sort=='name'){
+                    $products=$products->orderBy('brands.name', 'asc');
+                }
+                else if($sort=='priceDesc'){
+                    $products=$products->orderBy('prices.price', 'desc');
+                }
+                else if($sort=='nameDesc'){
                     $products=$products->orderBy('brands.name', 'desc');
                 }
             }
@@ -118,6 +137,17 @@ class ShopController extends OsnovniController
                     ->first();
                 $product->picture = $picture->path;
 
+            }
+            foreach ($products as $product) {
+                $product->rating = DB::table('reviews')
+                    ->select(DB::raw('AVG(rating) as rating'))
+                    ->where('model_specification_id', $product->model_specification_id)
+                    ->first();
+                $product->rating = $product->rating->rating;
+                $numOfReviews = DB::table('reviews')
+                    ->where('model_specification_id', $product->model_specification_id)
+                    ->count();
+                $product->numOfReviews = $numOfReviews;
             }
             $new = [];
             foreach ($products as $product){
@@ -153,6 +183,12 @@ class ShopController extends OsnovniController
             ->select('path')
             ->where('model_specification_id', $id)
             ->get();
+        $ratings = DB::table('reviews')
+            ->select(DB::raw('AVG(rating) as rating'))
+            ->where('model_specification_id', $id)
+            ->get();
+
+
 
         $specifications = DB::table('specifications')
             ->join('specifications_individually', 'specifications.id', '=', 'specifications_individually.specification_id')
@@ -170,13 +206,18 @@ class ShopController extends OsnovniController
         $countReviews = DB::table('reviews')
             ->where('model_specification_id', $id)
             ->count();
+        $ratings=$ratings[0]->rating;
+        $product->rating = $ratings;
+
+        $numOfReviews = DB::table('reviews')
+            ->where('model_specification_id', $id)
+            ->count();
 
 
 
 
 
-
-        return view('pages.main.show', ['product' => $product, 'specifications' => $specifications, 'names' => $names, 'data' => $data, 'reviews' => $reviews, 'countReviews' => $countReviews, 'pictures' => $pictures]);
+        return view('pages.main.show', ['product' => $product, 'specifications' => $specifications, 'names' => $names, 'data' => $data, 'reviews' => $reviews, 'countReviews' => $countReviews, 'pictures' => $pictures, 'ratings' => $ratings, 'numOfReviews' => $numOfReviews]);
     }
 
     public function cart(){
@@ -192,11 +233,22 @@ class ShopController extends OsnovniController
         $products = DB::table('model_specification')
             ->join('models', 'model_specification.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->join('pictures', 'model_specification.id', '=', 'pictures.model_specification_id')
             ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
-            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'model_specification.stockQuantity as stock')
+
+            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id',  'prices.price as current_price', 'model_specification.stockQuantity as stock')
+
+            ->addSelect(DB::raw('(SELECT price FROM prices AS p2 WHERE p2.model_specification_id = model_specification.id AND p2.date_to < NOW() ORDER BY p2.date_to DESC LIMIT 1) AS old_price'))
             ->distinct()
+            ->where('prices.date_to', '>', now())
             ->get();
+        foreach ($products as $product){
+            $picture = DB::table('pictures')
+                ->select('path')
+                ->where('model_specification_id', $product->model_specification_id)
+                ->first();
+            $product->picture = $picture->path;
+
+        }
         return response()->json($products);
     }
     public function orderproducts(Request $request){
@@ -271,6 +323,38 @@ class ShopController extends OsnovniController
             DB::rollback();
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function search($param)
+    {
+
+        $products = DB::table('model_specification')
+            ->join('models', 'model_specification.model_id', '=', 'models.id')
+            ->join('brands', 'models.brand_id', '=', 'brands.id')
+            ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
+            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id',  'prices.price as current_price', 'model_specification.stockQuantity as stock')
+            ->where('prices.date_to', '>', now())
+            ->where(function($query) use ($param) {
+                $query->where('models.name', 'like', '%'.$param.'%')
+                    ->orWhere('brands.name', 'like', '%'.$param.'%');
+            })
+            ->get();
+
+        foreach ($products as $product){
+            $picture = DB::table('pictures')
+                ->select('path')
+                ->where('model_specification_id', $product->model_specification_id)
+                ->first();
+            $product->picture = $picture->path;
+
+        }
+
+
+
+
+        return response()->json($products);
+
+
     }
 
 

@@ -12,16 +12,7 @@ class HomeController extends OsnovniController
 {
     public function index(){
 
-        $products = DB::table('model_specification')
-            ->join('models', 'model_specification.model_id', '=', 'models.id')
-            ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->join('pictures', 'model_specification.id', '=', 'pictures.model_specification_id')
-            ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
-            ->join('specifications_individually', 'model_specification.id', '=', 'specifications_individually.model_specification_id')
-            ->join('specifications', 'specifications.id', '=', 'specifications_individually.specification_id')
-            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price')
-            ->where('specifications.name', 'Yes')
-            ->get();
+
 
         $seed = date("Ymd");
         mt_srand($seed);
@@ -46,7 +37,7 @@ class HomeController extends OsnovniController
             ->get();
 
 
-        return view('pages.main.index' , ['products' => $products, 'productsRandom' => $productsRandom]);
+        return view('pages.main.index' , [ 'productsRandom' => $productsRandom]);
     }
 
     public function profile(){

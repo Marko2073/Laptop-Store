@@ -68,6 +68,12 @@ class RegisterController extends OsnovniController
         $user->address = $request->input('address');
         $user->city = $request->input('city');
         $user->save();
+        DB::table('log')->insert([
+            'log_type_id' => 5,
+            'user_id' => session()->get('user')->id,
+            'description' => 'User ' . session()->get('user')->firstname . ' ' . session()->get('user')->lastname . ' has updated his profile.',
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
         return redirect()->route('profile');
     }
     public function updatepicture(ImageRequest $request){
@@ -76,6 +82,12 @@ class RegisterController extends OsnovniController
             $image = $request->file('path')->getClientOriginalName();
             $user->path = $image;
             $user->save();
+            DB::table('log')->insert([
+                'log_type_id' => 5,
+                'user_id' => session()->get('user')->id,
+                'description' => 'User ' . session()->get('user')->firstname . ' ' . session()->get('user')->lastname . ' has updated his profile picture.',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
 
         return redirect()->route('profile');
     }

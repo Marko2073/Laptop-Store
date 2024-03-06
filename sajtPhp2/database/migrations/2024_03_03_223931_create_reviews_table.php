@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('model_specification_id')->references('id')->on('model_specification');
             $table->text('content');
+            $table->decimal('rating', 2, 1);
 
 
             $table->timestamps();

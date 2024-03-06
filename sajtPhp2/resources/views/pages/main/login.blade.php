@@ -21,6 +21,11 @@
                                 </ul>
                             </div>
                         @endif
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{session('error')}}
+                            </div>
+                        @endif
 
                         <form action="{{route('login')}}" method="POST" class="row" >
                             @csrf
@@ -33,7 +38,7 @@
 
                             <div class="col-md-12 form-group">
                                 <label>Password</label>
-                                <input class="form-control" type="text"  name="password" >
+                                <input class="form-control" type="password"  name="password" >
                             </div>
 
                             <div class="col-md-6 form-group mx-auto">

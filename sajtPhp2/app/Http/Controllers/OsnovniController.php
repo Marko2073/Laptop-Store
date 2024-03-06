@@ -19,8 +19,8 @@ class OsnovniController extends Controller
         $type = $file->getMimeType();
         list($width, $height) = getimagesize($tmpPath);
 
-        $newWidth = $profile ? 150 : 160;
-        $newHeight = $profile ? 150 : 120;
+        $newWidth = $profile ? 150 : 896;
+        $newHeight = $profile ? 150 : 672;
 
         if ($type == "image/jpeg") {
             $originalImage = imagecreatefromjpeg($tmpPath);

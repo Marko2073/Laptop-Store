@@ -22,7 +22,7 @@ class PictureSeeder extends Seeder
             ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id')
             ->get();
         foreach ($products as $product) {
-            for($i=0; $i<rand(4,5); $i++){
+            for($i=0; $i<4; $i++){
             $id = DB::table('pictures')->insertGetId([
                 'path' => $faker->imageUrl(320, 240, $product->brand_name . ' ' . $product->name, false),
                 'model_specification_id' => $product->model_specification_id,

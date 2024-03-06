@@ -49,10 +49,16 @@
                                       data-validation-required-message="Please enter your message" name="message"></textarea>
                             <p class="help-block text-danger"></p>
                         </div>
+                        @if(session()->get('user'))
                         <div>
                             <input class="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton" value="Send Message"/>
 
                         </div>
+                        @else
+                            <div>
+                                <a href="{{route('login')}}" class="btn btn-primary py-2 px-4">Login to send message</a>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>

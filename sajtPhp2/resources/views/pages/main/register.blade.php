@@ -6,44 +6,7 @@
 
 
 @section('content')
-    {{--<div class="login">
 
-
-        <div class="main-agileits">
-            <div class="form-w3agile">
-                <h3>Register</h3>
-                @if($errors->any())
-                    <div class="alert alert-danger">
-                        kitica
-                    </div>
-                @endif
-                <form action="{{route('store')}}" method="POST">
-                    @csrf
-                    <div class="key">
-                        <i class="fa fa-user" aria-hidden="true"></i>
-                        <input  type="text"  name="firstname"  placeholder="Username" value="{{old('firstname')}}">
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="key">
-                        <i class="fa fa-envelope" aria-hidden="true"></i>
-                        <input  type="text"  name="email"    placeholder="Email" value="{{old('email')}}">
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="key">
-                        <i class="fa fa-lock" aria-hidden="true"></i>
-                        <input  type="password"  name="password"  placeholder="Password" value="{{old('password')}}">
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="key">
-                        <i class="fa fa-lock" aria-hidden="true"></i>
-                        <input  type="password" name="passwordc"  placeholder="Confirm Password">
-                        <div class="clearfix"></div>
-                    </div>
-                    <input type="submit" value="Register">
-                </form>
-            </div>
-        </div>
-    </div>--}}
 
     <div class="container-fluid">
         <div class="row px-xl-5">
@@ -89,11 +52,11 @@
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Password</label>
-                                <input class="form-control" type="text"  name="password" >
+                                <input class="form-control" type="password"  name="password" >
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Retype password</label>
-                                <input class="form-control" type="text"  name="passwordc">
+                                <input class="form-control" type="password"  name="passwordc">
                             </div>
                             <div class="col-md-6 form-group mx-auto">
 

@@ -15,7 +15,7 @@
                 <div class="carousel-inner">
                     @foreach($pictures as $index => $picture)
                         <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                            <img src="{{ asset($picture->path) }}" alt="Product Image" class="d-block w-100">
+                            <img src="{{ asset('assets/img/products-resize/'.$picture->path) }}" alt="Product Image" class="d-block w-100">
                         </div>
                     @endforeach
                 </div>
@@ -41,14 +41,26 @@
                 @endif
                 <div class="d-flex mb-3">
                     <div class="text-primary mr-2">
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star-half-alt"></small>
-                        <small class="far fa-star"></small>
+                        @php
+                            $fullStars = floor($product->rating);
+                            $halfStars = ceil($product->rating - $fullStars);
+                            for($i = 0; $i < $fullStars; $i++) {
+                                echo '<i class="fas fa-star"></i>';
+                            }
+                            if ($halfStars > 0) {
+                                echo '<i class="fas fa-star-half-alt"></i>';
+                            }
+                            $emptyStars = 5 - $fullStars - $halfStars;
+                            for($i = 0; $i < $emptyStars; $i++) {
+                                echo '<i class="far fa-star"></i>';
+                            }
+                        @endphp
                     </div>
-                    <small class="pt-1">(99 Reviews)</small>
+                    <small class="pt-1">({{$numOfReviews}} Reviews)</small>
                 </div>
+
+
+
 
 
                 <h3 class="font-weight-bold mb-2 ">${{$product->current_price}}</h3>
@@ -163,34 +175,6 @@
                                 @endforeach
                                     {{$reviews->links()}}
                                 @endif
-                                {{--<div class="media mb-4">
-                                    <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                    <div class="media-body">
-                                        <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
-                                        <div class="text-primary mb-2">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
-                                            <i class="far fa-star"></i>
-                                        </div>
-                                        <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
-                                    </div>
-                                </div>
-                                <div class="media mb-4">
-                                    <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                    <div class="media-body">
-                                        <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
-                                        <div class="text-primary mb-2">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
-                                            <i class="far fa-star"></i>
-                                        </div>
-                                        <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
-                                    </div>
-                                </div>--}}
                             </div>
                             <div class="col-md-6">
 
@@ -202,7 +186,18 @@
                                     <div class="form-group">
                                         <label for="message">Your Review *</label>
                                         <textarea id="message" cols="30" rows="5" class="form-control" name="userreview"></textarea>
-                                        <input type="hidden" name="product_id" value="{{$product->id}}">
+                                        <input type="hidden" name="product_id" value="{{$product->model_specification_id}}">
+                                        <input type="hidden" name="rating" value="0" id="rating">
+                                    </div>
+                                    <div class="d-flex mb-3">
+                                        <div class="text-primary mr-2 klasaZvezde">
+                                            <i class="far fa-star" onclick="fillstars(1)"></i>
+                                            <i class="far fa-star" onclick="fillstars(2)"></i>
+                                            <i class="far fa-star" onclick="fillstars(3)"></i>
+                                            <i class="far fa-star" onclick="fillstars(4)"></i>
+                                            <i class="far fa-star" onclick="fillstars(5)"></i>
+
+                                        </div>
                                     </div>
 
                                     <div class="form-group mb-0">
@@ -221,6 +216,19 @@
         </div>
     </div>
 </div>
-<!-- Shop Detail End -->
-
+<script>
+    function fillstars(index) {
+    const stars = document.querySelectorAll('.klasaZvezde i');
+    document.getElementById('rating').value = index;
+    for (let i = 0; i < stars.length; i++) {
+        if (i < index) {
+            stars[i].classList.remove('far');
+            stars[i].classList.add('fas');
+        } else {
+            stars[i].classList.remove('fas');
+            stars[i].classList.add('far');
+        }
+    }
+}
+</script>
 @endsection

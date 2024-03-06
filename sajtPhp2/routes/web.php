@@ -32,6 +32,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/api/products', [ShopController::class, 'api'])->name('api');
+Route::get('/api/products/{param}', [ShopController::class, 'search'])->name('search');
 Route::get('/api/usercard', [UserController::class, 'usercard'])->name('usercard');
 Route::post('/products/order', [ShopController::class, 'orderproducts'])->name('orderproducts');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');

@@ -53,14 +53,36 @@
         <div class="col-lg-4 col-6 text-left">
             <form action="">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for products">
+                    <input type="text" class="form-control" placeholder="Search for products" id="keywordsSearch" name="pretraga">
                     <div class="input-group-append">
                             <span class="input-group-text bg-transparent text-primary">
                                 <i class="fa fa-search"></i>
                             </span>
                     </div>
+
+
                 </div>
+
             </form>
+            <div id="productStatus" class="col-lg-11 col-6 text-left">
+                <!-- Ovde će se dinamički popunjavati podaci -->
+            </div>
+
+            <style>
+                #productStatus{
+                    position: absolute;
+                    z-index: 1000;
+                    background-color: white;
+                    border: 1px solid #ddd;
+                    width: 100%;
+                }
+                #productStatus a{
+                    color: black;
+                }
+                #productStatus a:hover{
+                    background-color: #ddd;
+                }
+            </style>
         </div>
         <div class="col-lg-4 col-6 text-right">
             <p class="m-0">Customer Service</p>

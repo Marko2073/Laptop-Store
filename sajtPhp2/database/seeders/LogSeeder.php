@@ -18,6 +18,10 @@ class LogSeeder extends Seeder
             'register',
             'logout',
             'order',
+            'update user',
+            'add card',
+            'update card',
+            'contact',
         ];
 
         foreach ($logTypes as $logType) {

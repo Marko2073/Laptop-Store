@@ -43,8 +43,10 @@
                         <div class="card-header col-12">
                             <select class="form-control btn-secondary col-12" name="sort" id="sort">
                                 <option value="0" @if(request()->input('sort') == '0') selected @endif>Sort by</option>
-                                <option value="price" @if(request()->input('sort') == 'price') selected @endif>Price</option>
-                                <option value="name" @if(request()->input('sort') == 'name') selected @endif>Name</option>
+                                <option value="price" @if(request()->input('sort') == 'price') selected @endif>Price Asc</option>
+                                <option value="priceDesc" @if(request()->input('sort') == 'priceDesc') selected @endif>Price Desc</option>
+                                <option value="name" @if(request()->input('sort') == 'name') selected @endif>Name A-Z</option>
+                                <option value="nameDesc" @if(request()->input('sort') == 'nameDesc') selected @endif>Name Z-A</option>
                             </select>
                         </div>
                         @foreach($names as $index => $n)
@@ -74,10 +76,6 @@
                                                                     @endif
                                                                 @endforeach
                                                             @endif
-
-
-
-
 
 
                                                         />
@@ -133,7 +131,7 @@
                                     @endif
 
                                     <div class="product-img position-relative overflow-hidden">
-                                    <img class="img-fluid w-100" src="{{$product->picture}}" alt="">
+                                    <img class="img-fluid w-100" src="{{asset('assets/img/products-resize/'. $product->picture)}}" alt="">
                                     <div class="product-action">
                                         @if($product->stock != 0)
                                         <input type="hidden" class="BrojStock" data-id="{{$product->model_specification_id}}" value="{{$product->stock}}">
@@ -142,13 +140,35 @@
                                         <a class="btn btn-outline-dark btn-square" href="{{route('show',$product->model_specification_id)}}"><i class="fa fa-search"></i></a>
                                     </div>
                                 </div>
-                                <div class="text-center py-4">
-                                    <a class="h6 text-decoration-none text-truncate" href="{{route('show',$product->model_specification_id)}}">{{$product->brand_name. ' ' . $product->name}}</a>
-                                    <div class="d-flex align-items-center justify-content-center mt-2">
-                                        <h5>{{$product->current_price}}</h5><h6 class="text-muted ml-2"><del>{{$product->old_price}}</del></h6>
+                                    <div class="text-center py-4">
+                                        <a class="h6 text-decoration-none text-truncate" href="{{ route('show', $product->model_specification_id) }}">
+                                            {{ $product->brand_name . ' ' . $product->name }}
+                                        </a>
+                                        <div class="d-flex justify-content-center align-items-center mb-3"> <!-- Centriranje zvezdica -->
+                                            <div class="text-primary mr-2">
+                                                @php
+                                                    $fullStars = floor($product->rating);
+                                                    $halfStars = ceil($product->rating - $fullStars);
+                                                    for($i = 0; $i < $fullStars; $i++) {
+                                                        echo '<i class="fas fa-star"></i>';
+                                                    }
+                                                    if ($halfStars > 0) {
+                                                        echo '<i class="fas fa-star-half-alt"></i>';
+                                                    }
+                                                    $emptyStars = 5 - $fullStars - $halfStars;
+                                                    for($i = 0; $i < $emptyStars; $i++) {
+                                                        echo '<i class="far fa-star"></i>';
+                                                    }
+                                                @endphp
+                                            </div>
+                                            <small class="pt-1">({{ $product->numOfReviews }} Reviews)</small>
+                                        </div>
+
+                                        <div class="d-flex align-items-center justify-content-center mt-2"> <!-- Centriranje cene -->
+                                            <h5>{{ $product->current_price }}</h5><h6 class="text-muted ml-2"><del>{{ $product->old_price }}</del></h6>
+                                        </div>
                                     </div>
 
-                                </div>
                             </div>
                         </div>
 
