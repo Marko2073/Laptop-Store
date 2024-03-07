@@ -30,10 +30,15 @@ class ProductSeeder extends Seeder
 
                 ]);
             }
+            $prices = range(549, 1199, 50);
+            $price1 = $prices[array_rand($prices)];
+
+            $priceDifference = range(50, 200,10);
+            $price2 = $price1 + array_rand($priceDifference);
 
             $id=DB::table('prices')->insertGetId([
                 'model_specification_id' => $product->id,
-                'price' => rand(5, 50),
+                'price' => $price1,
                 'date_from' => date('Y-m-d', strtotime('-1 day')),
                 'date_to' => date('Y-m-d', strtotime('+1 year')),
                 'created_at' => date('Y-m-d H:i:s'),
@@ -43,7 +48,7 @@ class ProductSeeder extends Seeder
             if($i){
                 DB::table('prices')->insert([
                     'model_specification_id' => $product->id,
-                    'price' => rand(5, 50),
+                    'price' => $price2,
                     'date_from' => date('Y-m-d', strtotime('-2 year')),
                     'date_to' => date('Y-m-d', strtotime('-1 day')),
 

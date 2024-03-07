@@ -60,17 +60,28 @@ class HomeController extends OsnovniController
             ->join('model_specification', 'purchases.model_specification_id', '=', 'model_specification.id')
             ->join('models', 'model_specification.model_id', '=', 'models.id')
             ->join('brands', 'models.brand_id', '=', 'brands.id')
-            ->join('pictures', 'model_specification.id', '=', 'pictures.model_specification_id')
             ->join('prices', 'model_specification.id', '=', 'prices.model_specification_id')
             ->join('user_cart', 'purchases.user_cart_id', '=', 'user_cart.id')
             ->join('users', 'user_cart.user_id', '=', 'users.id')
             ->leftJoin('credit_cards', 'purchases.payment_method', '=', 'credit_cards.id')
-            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'pictures.path as picture', 'prices.price as price', 'purchases.*', DB::raw("IF(purchases.payment_method = 0, 'Cash', credit_cards.card_name) as payment_method_name"
-
-
-            ))
+            ->leftJoin('pictures', function ($join) {
+                $join->on('pictures.model_specification_id', '=', 'model_specification.id')
+                    ->whereRaw('pictures.id = (SELECT MIN(id) FROM pictures p WHERE p.model_specification_id = pictures.model_specification_id)');
+            })
+            ->select('models.*', 'brands.name as brand_name', 'model_specification.id as model_specification_id', 'prices.price as price', 'purchases.*',
+                DB::raw("IF(purchases.payment_method = 0, 'Cash', credit_cards.card_name) as payment_method_name"),
+                DB::raw("pictures.path as path"))
             ->whereIn('purchases.user_cart_id', $user_carts->pluck('id'))
+            ->where('prices.date_to', '>', now())
             ->get();
+
+
+
+
+
+
+
+
         $picture= DB::table('users')
             ->where('id', session()->get('user')->id)
             ->select('path')

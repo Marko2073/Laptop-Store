@@ -285,13 +285,15 @@
                                                                 @if($order->user_cart_id == $cart->id)
                                                                     <tr>
                                                                         <td>{{$order->brand_name.' '.$order->name}}</td>
-                                                                        <td><img src="{{$order->picture}}" style="width: 70px; height: 70px;"></td>
+                                                                        <td>
+                                                                                <img src="{{asset('assets/img/products-resize/'. $order->path)}}" style="width: 70px; height: 70px;">
+
+                                                                        </td>
                                                                         <td>{{$order->price}}$</td>
                                                                         <td>{{$order->quantity}}</td>
                                                                         <td>{{$order->price*$order->quantity}}$</td>
                                                                         <td>{{$order->payment_method_name}}</td>
                                                                     </tr>
-
                                                                 @endif
                                                             @endforeach
                                                             </tbody>

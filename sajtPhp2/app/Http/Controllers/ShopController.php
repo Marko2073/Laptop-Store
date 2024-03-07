@@ -194,6 +194,7 @@ class ShopController extends OsnovniController
             ->join('specifications_individually', 'specifications.id', '=', 'specifications_individually.specification_id')
             ->select('specifications.*')
             ->where('specifications_individually.model_specification_id', $id)
+            ->distinct()
             ->get();
         $names = DB::table('specifications')->where('parent_id', null)->get();
         $data= [];

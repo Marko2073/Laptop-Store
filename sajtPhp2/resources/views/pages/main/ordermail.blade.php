@@ -147,7 +147,7 @@
                     <tbody>
                     @foreach($products as $index=>$product)
                         <tr>
-                            <td>{{$product->name}}</td>
+                            <td>{{$product->brand_name . ' ' .$product->name}}</td>
                             <td><i class="fa fa-inr"></i> {{$product->price}}</td>
                             <td>{{$product->quantity}}</td>
                         </tr>

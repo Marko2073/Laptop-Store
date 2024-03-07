@@ -447,29 +447,28 @@ $(document).ready(function(){
 
 
 
+var dugmeZaNarucivanje = document.getElementById('dugmeUpis');
+var loader = document.getElementById('loader1');
 
-    var dugmeZaNarucivanje = document.getElementById('dugmeUpis');
-    dugmeZaNarucivanje.addEventListener('click', function(){
-        var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-        console.log(csrfToken);
+dugmeZaNarucivanje.addEventListener('click', function(){
+    loader.style.display = 'block';
+    var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+    console.log(csrfToken);
 
-        var select = document.getElementById('Placanje');
-        var placanje = select.value;
-        var cart = JSON.parse(localStorage.getItem('cart'));
-        if(cart.length==0){
-            alert('Cart is empty');
-            return;
-        }
-        else{
+    var select = document.getElementById('Placanje');
+    var placanje = select.value;
+    var cart = JSON.parse(localStorage.getItem('cart'));
+    if(cart.length==0){
+        alert('Cart is empty');
+        return;
+    } else {
         if(placanje==1){
             var card = document.getElementById('IzborKartice').value;
             if(card==0){
                 toastr.error('Choose card');
+                loader.style.display = 'none'; // sakrij loader u slučaju greške
                 return;
-            }
-            else{
-                 console.log(card);
-                 console.log(cart);
+            } else {
                 $.ajax({
                     url: '/products/order',
                     method: 'post',
@@ -484,52 +483,46 @@ $(document).ready(function(){
                         localStorage.setItem('cart', '[]');
                         toastr.success('Order successful');
                         document.getElementById("purchaseModal").style.display = "block";
-
+                        loader.style.display = 'none'; // ugasi loader nakon uspješnog ajax poziva
                     }
                 });
 
             }
-            }
-            else if(placanje==2){
-                $.ajax({
-                    url: '/products/order',
-                    method: 'post',
-                    headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                    },
-                    data: {
-                        cart: cart,
-                        card : 0
-                    },
-                    success: function(response){
-                        localStorage.setItem('cart', '[]');
-                        toastr.success('Order successful');
-                        document.getElementById("purchaseModal").style.display = "block";
-
-
-
-                    }
-                });
-            }
-            else{
-                toastr.error('Choose payment method');
-            }
+        } else if(placanje==2){
+            $.ajax({
+                url: '/products/order',
+                method: 'post',
+                headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                },
+                data: {
+                    cart: cart,
+                    card : 0
+                },
+                success: function(response){
+                    localStorage.setItem('cart', '[]');
+                    toastr.success('Order successful');
+                    document.getElementById("purchaseModal").style.display = "block";
+                    loader.style.display = 'none'; // ugasi loader nakon uspješnog ajax poziva
+                }
+            });
+        } else {
+            toastr.error('Choose payment method');
+            loader.style.display = 'none'; // sakrij loader u slučaju greške
         }
+    }
+});
 
 var showModalBtn = document.getElementById("showModalBtn");
-    var closeBtn = document.querySelector(".close");
+var closeBtn = document.querySelector(".close");
 
+function closeModal() {
+    modal.style.display = "none";
+    window.location.href = '/shop';
+}
 
-    function closeModal() {
-        modal.style.display = "none";
-        window.location.href = '/shop';
-    }
+closeBtn.addEventListener("click", closeModal);
 
-    closeBtn.addEventListener("click", closeModal);
-
-
-
-    });
 });
 }
 

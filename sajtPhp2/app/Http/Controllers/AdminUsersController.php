@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InsertUserRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
@@ -41,7 +42,7 @@ class AdminUsersController extends OsnovniController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RegisterRequest $request)
+    public function store(InsertUserRequest $request)
     {
 
         if($request->hasFile('path')){

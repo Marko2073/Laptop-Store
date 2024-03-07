@@ -8,6 +8,25 @@
 
 @section('content')
 
+    <!-- Loader -->
+    <!-- Loader -->
+    <!-- Loader -->
+    <div id="loader1" class="loader1">
+        <img src="{{asset('assets/img/loading-loading-forever.gif')}}" alt="Loader" style="width: 100px">
+    </div>
+
+    <style>
+        .loader1 {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            width: 150px;
+            display: none;
+        }
+    </style>
+
     <!-- Breadcrumb Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">

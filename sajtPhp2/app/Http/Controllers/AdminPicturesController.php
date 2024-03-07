@@ -45,7 +45,7 @@ class AdminPicturesController extends OsnovniController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PicturesRequest $request)
+    public function store(ImageRequest $request)
     {
         $this->cutImage($request);
         $data = $request->input();
