@@ -42,7 +42,7 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     <img class="rounded-circle me-lg-2" src="{{asset('assets/img/products-resize/'.session('user')->path)}}" alt="" style="width: 40px; height: 40px;">
-                    <span class="d-none d-lg-inline-flex">John Doe</span>
+                    <span class="d-none d-lg-inline-flex">{{session()->get('user')->firstname}}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                     <a href="/profile" class="dropdown-item">My Profile</a>

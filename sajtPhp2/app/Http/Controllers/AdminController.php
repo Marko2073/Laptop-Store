@@ -12,25 +12,30 @@ use Psy\Readline\Hoa\File;
 class AdminController extends OsnovniController
 {
 
-    public function admin()
+    public function admin(Request $request)
     {
-        $log= DB::table('log')
+        $dateFilter = $request->input('dateFilter');
+        $query = DB::table('log')
             ->join('log_type', 'log.log_type_id', '=', 'log_type.id')
             ->join('users', 'log.user_id', '=', 'users.id')
             ->select('log.*', 'log_type.name as log_type', 'users.firstname as name', 'users.lastname as surname')
-            ->orderBy('log.created_at', 'desc')
-            ->paginate(5);
+            ->orderBy('log.created_at', 'desc');
 
+        if ($request->has('reset')) {
+            $dateFilter = null;
+        }
 
+        if ($dateFilter) {
+            $query->whereDate('log.created_at', $dateFilter);
+        }
 
+        $logs = $query->paginate(5)->withQueryString();
 
-
-
-
-
-        return view('pages.admin.index', ['log' => $log]);
-
+        return view('pages.admin.index', ['log' => $logs, 'dateFilter' => $dateFilter]);
     }
+
+
+
     public function table($name)
     {
         $data = DB::table($name)->paginate(10);

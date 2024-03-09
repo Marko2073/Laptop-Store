@@ -6,8 +6,10 @@ use App\Http\Requests\InsertUserRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
+use Couchbase\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Mockery\CountValidator\Exception;
 
 class AdminUsersController extends OsnovniController
 {
@@ -123,9 +125,32 @@ class AdminUsersController extends OsnovniController
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(string $id)
     {
-        DB::table('users')->where('id', $id)->delete();
-        return redirect()->route('table', ['name' => 'users']);
+        $user = DB::table('users')->where('id', $id)->first();
+
+        if ($user) {
+            $creditCards = DB::table('credit_cards')->where('user_id', $id)->exists();
+            $logs = DB::table('log')->where('user_id', $id)->exists();
+
+            if ($creditCards) {
+                return redirect()->route('table', ['name' => 'users'])->with('error', 'User has associated credit cards and cannot be deleted.');
+            }
+            if($logs){
+                return redirect()->route('table', ['name' => 'users'])->with('error', 'User has associated logs and cannot be deleted.');
+            }
+
+
+            // Ako ne postoje povezani podaci, obriši korisnika
+            DB::table('users')->where('id', $id)->delete();
+
+            return redirect()->route('table', ['name' => 'users'])->with('success', 'User deleted successfully.');
+        } else {
+            return redirect()->route('table', ['name' => 'users'])->with('error', 'User not found.');
+        }
     }
+
+
+
 }

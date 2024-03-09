@@ -117,8 +117,14 @@ class AdminSpecificationsController extends Controller
      */
     public function destroy(string $id)
     {
-        DB::table('specifications')->where('id', $id)->delete();
+        $specifications_individualy = DB::table('specifications_individually')->where('specification_id', $id)->get();
+        if(count($specifications_individualy) > 0){
+            return redirect()->route('table', ['name' => 'specifications'])->with('error', 'This specification is used in some products');
+        }
+        else{
+            DB::table('specifications')->where('id', $id)->delete();
+            return redirect()->route('table', ['name' => 'specifications']);
+        }
 
-        return redirect()->route('table', ['name' => 'specifications']);
     }
 }

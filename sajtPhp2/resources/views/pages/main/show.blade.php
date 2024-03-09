@@ -155,6 +155,14 @@
                                             <h6>{{$r->name}}<small> - <i>{{$r->created_at}}</i></small></h6>
 
                                             <p>{{$r->content}}</p>
+                                            @for($i=0;$i<5; $i++)
+                                                @if($r->rating>=$i)
+                                                    <i class="fas fa-star"></i>
+                                                @else
+                                                    <i class="far fa-star"></i>
+                                                @endif
+
+                                            @endfor
                                         </div>
                                     </div>
 

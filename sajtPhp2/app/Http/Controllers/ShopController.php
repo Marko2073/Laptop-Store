@@ -87,7 +87,6 @@ class ShopController extends OsnovniController
 
                 $tmp = [];
                 if (!is_array($value)) {
-                    // Preskoči iteraciju ako je $value nije niz
                     continue;
                 }
 
@@ -226,6 +225,10 @@ class ShopController extends OsnovniController
         return view('pages.main.cart');
     }
     public function checkout(){
+        if(session()->get('user') == null){
+            return redirect()->route('login');
+        }
+
         $id = session()->get('user')->id;
         $info = User::find($id);
         return view('pages.main.checkout', ['info' => $info]);

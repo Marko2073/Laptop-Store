@@ -14,7 +14,18 @@
     <div class="container-fluid pt-4 px-4">
         <div class="col-sm-12 col-xl-12">
             <div class="bg-secondary rounded h-100 p-4">
-                <h6 class="mb-4">Hoverable Table</h6>
+                <form class="row mb-4" action="{{ route('admin') }}" method="GET">
+                    <div class="col-sm-3">
+                        <input type="date" class="form-control p-1" id="dateFilter" name="dateFilter" value="{{ $dateFilter ?? '' }}">
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="submit" class="btn btn-primary mr-2">Filter</button>
+                        <button type="submit" class="btn btn-secondary" name="reset" value="true">Reset</button>
+                    </div>
+                </form>
+
+
+
                 <table class="table table-hover">
                     <thead>
                     <tr>

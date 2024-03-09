@@ -1,7 +1,6 @@
 (function ($) {
     "use strict";
 
-    // Dropdown on mouse hover
     $(document).ready(function () {
         function toggleNavbarMethod() {
             if ($(window).width() > 992) {
@@ -252,7 +251,7 @@ $(document).ready(function(){
      var products = JSON.parse(localStorage.getItem('cart')) || [];
 
      if (products.length > 0) {
-         displayLoader(); // Prikaži loader pre AJAX poziva
+         displayLoader();
          $.ajax({
              url: '/api/products',
              method: 'GET',
@@ -265,8 +264,8 @@ $(document).ready(function(){
                              var product = response[j];
                              html += `
                                  <div class="d-flex justify-content-between mb-2">
-                                     <p>${products[i].quantity} x ${product.name}</p>
-                                     <p>${product.current_price}</p>
+                                     <p>${products[i].quantity} x ${product.brand_name} ${product.name}</p>
+                                     <p>${product.current_price}$</p>
                                  </div>
                              `;
                              totalPrice += product.current_price * products[i].quantity;
@@ -276,14 +275,14 @@ $(document).ready(function(){
                  html += `
                      <div class="d-flex justify-content-between font-weight-bold">
                          <p>Total</p>
-                         <p>${totalPrice}</p>
+                         <p>${totalPrice}$</p>
                      </div>
                  `;
                  cartInfo.querySelector('.card-body').innerHTML = html;
-                 hideLoader(); // Sakrij loader nakon što se AJAX uspešno završi
+                 hideLoader();
              },
              error: function() {
-                 hideLoader(); // Sakrij loader u slučaju greške
+                 hideLoader();
              }
          });
      }
@@ -530,6 +529,10 @@ if(window.location.pathname=='/cart'){
 $(document).ready(function(){
     function updateCart(){
         var cart = JSON.parse(localStorage.getItem('cart'));
+        if(cart.length==0){
+            document.getElementById('KorpaProizvodi').innerHTML = '<h3 class="text-center">Your cart is empty</h3>';
+            return;
+        }
         var element = document.getElementById('korpa');
         var divEl=document.getElementById('TotalOrder');
         $.ajax({

@@ -60,6 +60,7 @@ Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
 
 Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
     Route::get('/admin', [AdminController::class, 'admin'])->name('admin');
+    Route::get('/admin/{dateFilter?}', [AdminController::class, 'admin'])->name('admin');
     Route::get('/admin/{name}', [AdminController::class, 'table'])->name('table');
     Route::resource('/brands', AdminBrandsController::class);
     Route::resource('/models', AdminModelsController::class);

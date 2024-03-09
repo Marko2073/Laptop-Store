@@ -116,8 +116,14 @@ class AdminModelsController extends Controller
      */
     public function destroy(string $id)
     {
-        DB::table('models')->where('id', $id)->delete();
+        $model_specifications = DB::table('model_specification')->where('model_id', $id)->get();
+        if($model_specifications->count() > 0){
+            return redirect()->route('table', ['name' => 'models'])->with('error', 'You can not delete this model, because it has specifications');
+        }
+        else{
+            DB::table('models')->where('id', $id)->delete();
+            return redirect()->route('table', ['name' => 'models']);
+        }
 
-        return redirect()->route('table', ['name' => 'models']);
     }
 }

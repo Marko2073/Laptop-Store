@@ -114,8 +114,14 @@ class AdminBrandsController extends Controller
     public function destroy(string $id)
     {
 
-        DB::table('brands')->where('id', $id)->delete();
+       $models = DB::table('models')->where('brand_id', $id)->get();
+         if($models->count() > 0){
+              return redirect()->route('table', ['name' => 'brands'])->with('error', 'You can not delete this brand, because it has models');
+         }
+         else{
+              DB::table('brands')->where('id', $id)->delete();
+              return redirect()->route('table', ['name' => 'brands']);
+         }
 
-        return redirect()->route('table', ['name' => 'brands']);
     }
 }

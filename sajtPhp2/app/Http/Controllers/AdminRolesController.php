@@ -96,7 +96,14 @@ class AdminRolesController extends Controller
      */
     public function destroy(string $id)
     {
-        DB::table('roles')->where('id', $id)->delete();
-        return redirect()->route('table', ['name' => 'roles']);
+        $user = DB::table('users')->where('role_id', $id)->get();
+        if(count($user) > 0){
+            return redirect()->route('table', ['name' => 'roles'])->with('error', 'You can not delete this role, because it is used by some users');
+        }
+        else{
+            DB::table('roles')->where('id', $id)->delete();
+            return redirect()->route('table', ['name' => 'roles']);
+        }
+
     }
 }
